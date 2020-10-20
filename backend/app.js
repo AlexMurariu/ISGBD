@@ -1,21 +1,14 @@
 const express = require("express");
-const cors = require("cors");
-const axios = require("axios");
 const bodyParser = require("body-parser");
-const querystring = require("querystring");
 const fs = require("fs");
-const databaseModel = require("./models/databaseModel");
 const utils = require("./utils");
-const { FILE } = require("dns");
 
 const app = express();
-const jsonParser = bodyParser.json();
-
-app.use(jsonParser);
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
+  
 if (!module.parent) {
-    const port = process.env.PORT || 3000;
+    const port = process.env.PORT || 3001;
     app.listen(port, () => {
         console.log("Da tati te ascult!");
     });
@@ -30,6 +23,12 @@ function readFromFile(fileName) {
     return database;
 }
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    next();
+});
+
 app.get("/database", (req, res) => {
     const database = readFromFile(FILE_NAME);
     res.send(database);
@@ -38,6 +37,7 @@ app.get("/database", (req, res) => {
 app.post("/database", (req, res) => {
     const database = readFromFile(FILE_NAME);
     const insertedDatabase = req.body;
+    console.log(insertedDatabase);
 
     const isPresent = utils.findInDatabaseList(database.databases, insertedDatabase.databaseName);
 
