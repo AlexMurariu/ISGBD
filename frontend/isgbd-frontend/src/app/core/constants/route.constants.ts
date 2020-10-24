@@ -1,4 +1,4 @@
 export const AppRoutes = {
-    SelectDatabase: 'select-database',
+    ManageDatabases: 'manage-databases',
     ViewDatabase: 'view-database'
 }

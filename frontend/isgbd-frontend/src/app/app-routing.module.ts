@@ -5,8 +5,8 @@ import { AppRoutes } from './core/constants';
 
 const routes: Routes = [
     {
-        path: AppRoutes.SelectDatabase,
-        loadChildren: () => import('./select-database/select-database.module').then(m => m.SelectDatabaseModule)
+        path: AppRoutes.ManageDatabases,
+        loadChildren: () => import('./manage-databases/manage-databases.module').then(m => m.ManageDatabasesModule)
     },
     {
         path: AppRoutes.ViewDatabase,
@@ -17,7 +17,7 @@ const routes: Routes = [
         component: HomeComponent
     },
     {
-        path: '*',
+        path: '**',
         redirectTo: ''
     }
 ];
