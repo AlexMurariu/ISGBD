@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 if (!module.parent) {
     const port = process.env.PORT || 3001;
     app.listen(port, () => {
-        console.log("Da tati te ascult!");
+        console.log("Server is open");
     });
 }
 
@@ -29,125 +29,60 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get("/database", (req, res) => {
-    const database = readFromFile(FILE_NAME);
-    res.send(database);
+app.get("/databases", (req, res) => {
+    const databaseFromFile = readFromFile(FILE_NAME);
+    const databaseList = databaseFromFile.databases.map(database => database.dataBaseName);
+    res.send(databaseList);
 });
 
-app.post("/database", (req, res) => {
-    const database = readFromFile(FILE_NAME);
-    const insertedDatabase = req.body;
-    console.log(insertedDatabase);
+app.get("/database/:name", (req, res) => {
+    const databaseFromFile = readFromFile(FILE_NAME);
+    const databaseName = req.params.name;
+    const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
 
-    const isPresent = utils.findInDatabaseList(database.databases, insertedDatabase.databaseName);
-
-    if (isPresent !== -1) {
-        res.status(400);
+    if (databaseIndex !== -1) {
+        const databaseTables = databaseFromFile.databases[databaseIndex].tables;
+        res.status(200);
+        res.send(databaseTables);
     } else {
-        database.databases.push(insertedDatabase);
-        fs.writeFileSync(FILE_NAME, JSON.stringify(database));
+        res.status(404);
+        res.send('Database not found in the system!');
+    }
+})
+
+app.post("/database", (req, res) => {
+    const databaseFromFile = readFromFile(FILE_NAME);
+    const newDatabaseName = req.body.databaseName;
+
+    const newDatabase = {
+        dataBaseName: newDatabaseName,
+        tables: []
     }
 
-    res.send();
+    const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', newDatabaseName);
+
+    if (databaseIndex !== -1) {
+        res.status(400);
+        res.send('Database already exists!')
+    } else {
+        databaseFromFile.databases.push(newDatabase);
+        fs.writeFileSync(FILE_NAME, JSON.stringify(databaseFromFile));
+        res.send('Database was added!');
+    }
 });
 
 app.delete("/database/:name", (req, res) => {
-    const database = readFromFile(FILE_NAME);
+    const databaseFromFile = readFromFile(FILE_NAME);
     const databaseName = req.params.name;
-    const isPresent = utils.findInDatabaseList(database.databases, databaseName);
+    const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
 
-    if (isPresent === -1) {
+    if (databaseIndex === -1) {
         res.status(404);
+        res.send("Database not found!");
     } else {
-        database.databases.splice(isPresent, 1);
+        databaseFromFile.databases.splice(databaseIndex, 1);
         res.status(201);
-        fs.writeFileSync(FILE_NAME, JSON.stringify(database));
+        fs.writeFileSync(FILE_NAME, JSON.stringify(databaseFromFile));
+        res.send("Database was deleted!");
     }
-
-    res.send();
 });
-
-app.post("/database/:name/table", (req, res) => {
-    const database = readFromFile(FILE_NAME);
-    const databaseName = req.params.name;
-    const insertedTable = req.body;
-    const isDbPresent = utils.findInDatabaseList(database.databases, databaseName);
-
-    if (isDbPresent === -1) {
-        res.status(404);
-    } else {
-        const tableList = database.databases[isDbPresent].tables;
-        const isTablePresent = utils.findInTableList(tableList, insertedTable.tableName);
-
-        if (isTablePresent === -1) {
-            database.databases[isDbPresent].tables.push(insertedTable);
-            fs.writeFileSync(FILE_NAME, JSON.stringify(database));
-        } else {
-            res.status(204);    
-        }
-    }
-
-    res.send();
-});
-
-app.delete("/database/:name/table/:tableName", (req, res) => {
-    const database = readFromFile(FILE_NAME);
-    const databaseName = req.params.name;
-    const tableName = req.params.tableName;
-    const isDbPresent = utils.findInDatabaseList(database.databases, databaseName);
-
-    if (isDbPresent === -1) {
-        res.status(404);
-    } else {
-        const tableList = database.databases[isDbPresent].tables;
-        const isTablePresent = utils.findInTableList(tableList, tableName);
-
-        if (isTablePresent !== -1) {
-            database.databases[isDbPresent].tables.splice(isTablePresent, 1);
-            fs.writeFileSync(FILE_NAME, JSON.stringify(database));
-        } else {
-            res.status(404);    
-        }
-    }
-
-    res.send();
-});
-
-app.post("/database/:name/table/:tableName/index", (req, res) => {
-    const database = readFromFile(FILE_NAME);
-    const databaseName = req.params.name;
-    const tableName = req.params.tableName;
-    const insertedIndex = req.body;
-    const isDbPresent = utils.findInDatabaseList(database.databases, databaseName);
-
-    if (isDbPresent === -1) {
-        res.status(404);
-    } else {
-        const tableList = database.databases[isDbPresent].tables;
-        const isTablePresent = utils.findInTableList(tableList, tableName);
-
-        if (isTablePresent !== -1) {
-            const indexList = tableList[isTablePresent].indexFiles;
-            const isIndexPresent = utils.findInIndexList(indexList, insertedIndex.indexName);
-
-            if (isIndexPresent !== -1) {
-                res.status(400);
-            } else {
-                const attrList = tableList[isTablePresent].attributes;
-                const attribute = insertedIndex.indexAttributes.IAttribute;
-                const isAttributePresent = utils.findInAttrList(attrList, attribute);
-
-                if (isAttributePresent !== -1) {
-                    indexList.push(insertedIndex);
-                    fs.writeFileSync(FILE_NAME, JSON.stringify(database));
-                } else {
-                    res.status(404);
-                }
-            }
-        } else {
-            res.status(404);   
-        }
-    }
-
-    res.send();
-})
