@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const utils = require("./utils");
+const { table } = require("console");
 
 const app = express();
 app.use(bodyParser.json());
@@ -86,3 +87,98 @@ app.delete("/database/:name", (req, res) => {
         res.send("Database was deleted!");
     }
 });
+
+app.get("/databases", (req, res) => {
+    const databaseFromFile = readFromFile(FILE_NAME);
+    const databaseList = databaseFromFile.databases.map(database => database.dataBaseName);
+    res.send(databaseList);
+});
+
+app.post("/database/:name/table", (req, res) => {
+    const databaseFromFile = readFromFile(FILE_NAME);
+    const databaseName = req.params.name;
+    const insertedTable = req.body;
+    const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
+
+    if (databaseIndex === -1) {
+        res.status(404);
+        res.send('Database not found!')
+    } else {
+        const tableList = databaseFromFile.databases[databaseIndex].tables;
+        const tableIndex = utils.findItemInList(tableList, 'tableName', insertedTable.tableName);
+
+        if (tableIndex === -1) {
+            databaseFromFile.databases[databaseIndex].tables.push(insertedTable);
+            fs.writeFileSync(FILE_NAME, JSON.stringify(databaseFromFile));
+            res.send('Table was added!');
+        } else {
+            res.status(400);
+            res.send('Table name was already in the database');    
+        }
+    }
+});
+
+app.delete("/database/:databaseName/table/:tableName", (req, res) => {
+    const databaseFromFile = readFromFile(FILE_NAME);
+    const databaseName = req.params.databaseName;
+    const tableName = req.params.tableName;
+    const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
+
+    if (databaseIndex === -1) {
+        res.status(404);
+        res.send('Database not found!');
+    } else {
+        const tableList = databaseFromFile.databases[databaseIndex].tables;
+        const tableIndex = utils.findItemInList(tableList, 'tableName', tableName);
+
+        if (tableIndex !== -1) {
+            databaseFromFile.databases[databaseIndex].tables.splice(tableIndex, 1);
+            fs.writeFileSync(FILE_NAME, JSON.stringify(databaseFromFile));
+            res.send('Table deleted succesfully!')
+        } else {
+            res.status(404);
+            res.send('Table not found!');
+        }
+    }
+});
+
+app.post("/database/:databaseName/table/:tableName/index", (req, res) => {
+    const databaseFromFile = readFromFile(FILE_NAME);
+    const databaseName = req.params.databaseName;
+    const tableName = req.params.tableName;
+    const insertedIndex = req.body;
+    const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
+
+    if (databaseIndex === -1) {
+        res.status(404);
+        res.send('Database not found!');
+    } else {
+        const tableList = databaseFromFile.databases[databaseIndex].tables;
+        const tableIndex = utils.findItemInList(tableList, 'tableName', tableName);
+
+        if (tableIndex !== -1) {
+            const indexList = tableList[tableIndex].indexFiles;
+            const indexPozition = utils.findItemInList(indexList, 'indexName', insertedIndex.indexName);
+
+            if (indexPozition !== -1) {
+                res.status(400);
+                res.send('Index already in database');
+            } else {
+                const attrList = tableList[tableIndex].attributes;
+                const attribute = insertedIndex.indexAttributes.IAttribute;
+                const attributeIndex = utils.findItemInList(attrList, 'attributeName', attribute);
+
+                if (attributeIndex !== -1) {
+                    indexList.push(insertedIndex);
+                    fs.writeFileSync(FILE_NAME, JSON.stringify(database));
+                } else {
+                    res.status(404);
+                    res.send('Attribute not found!');
+                }
+            }
+        } else {
+            res.status(404); 
+            res.send('Table not found!');  
+        }
+    }
+})
