@@ -2,15 +2,23 @@
   <div class="title">
     Manage databases
   </div>
+  <div class="filter-container" [formGroup]="filterDatabasesForm">
+    <mat-form-field>
+      <input matInput formControlName="searchDatabase" placeholder="Database name" autocomplete="off">
+    </mat-form-field>
+  </div>
   <div class="content">
     <div *ngIf="databaseIsLoading" class="spinner-container">
       <mat-spinner color="primary"></mat-spinner>
     </div>
     <div class="no-database-error" *ngIf="databaseList && !databaseList.length">
-      There are no databases to display!
+      There are no databases to display
+    </div>
+    <div class="no-database-error" *ngIf="filteredDatabaseList && !filteredDatabaseList.length">
+      No search results
     </div>
     <div class="database-list" *ngIf="!databaseIsLoading && databaseList && databaseList.length">
-      <div class="database-line" *ngFor="let databaseName of databaseList">
+      <div class="database-line" *ngFor="let databaseName of filteredDatabaseList">
         <div class="database-name">{{databaseName}}</div>
         <div class="buttons-container">
           <button class="action-button" mat-raised-button color="primary" (click)="selectDatabase(databaseName)">

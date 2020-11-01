@@ -10,10 +10,13 @@
         font-weight: 500;
     }
 
+    .filter-container {
+        margin-top: 10px;
+    }
+
     .content {
         display: flex;
         flex-direction: column;
-        margin-top: 20px;
 
         .spinner-container {
             width: 100%;
