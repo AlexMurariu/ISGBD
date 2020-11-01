@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { filterItems } from 'src/app/shared/helpers/filter-items.helper';
 
@@ -9,7 +9,7 @@ import { filterItems } from 'src/app/shared/helpers/filter-items.helper';
   styleUrls: ['./manage-databases.component.scss']
 })
 export class ManageDatabasesComponent implements OnInit, OnChanges {
-  filterDatabasesForm: FormGroup;
+  databasesForm: FormGroup;
   filteredDatabaseList: string[];
 
   @Input() databaseList: string[];
@@ -17,15 +17,17 @@ export class ManageDatabasesComponent implements OnInit, OnChanges {
   @Input() getDatabaseListError: string;
   @Output() selectDatabaseAction: EventEmitter<string> = new EventEmitter<string>();
   @Output() deleteDatabaseAction: EventEmitter<string> = new EventEmitter<string>();
+  @Output() addDatabaseAction: EventEmitter<string> = new EventEmitter<string>();
   
   constructor(private readonly fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.filterDatabasesForm = this.fb.group({
-      searchDatabase: ['']
+    this.databasesForm = this.fb.group({
+      searchDatabase: [''],
+      addDatabases: ['', [Validators.pattern("^[a-zA-Z][a-zA-Z0-9]*[a-zA-Z0-9]$")]]
     });
 
-    this.searchDatabaseControl.valueChanges.pipe(debounceTime(500))
+    this.getSearchDatabaseControl.valueChanges.pipe(debounceTime(500))
     .subscribe((searchString: string) => {
       this.filteredDatabaseList = this.filterDatabases(searchString);
     });
@@ -37,8 +39,13 @@ export class ManageDatabasesComponent implements OnInit, OnChanges {
     }
   }
 
-  get searchDatabaseControl() {
-    return this.filterDatabasesForm.get('searchDatabase');
+  get getSearchDatabaseControl() {
+    return this.databasesForm.get('searchDatabase');
+  }
+
+  get getAddDatabaseControl() {
+    console.log(this.databasesForm.get('addDatabases').value)
+    return this.databasesForm.get('addDatabases');
   }
 
   selectDatabase(databaseName: string) {
@@ -47,6 +54,11 @@ export class ManageDatabasesComponent implements OnInit, OnChanges {
   
   deleteDatabase(databaseName: string) {
     this.deleteDatabaseAction.emit(databaseName);
+  }
+
+  addDatabase() {
+    const databaseName = this.getAddDatabaseControl.value.trim();
+    this.addDatabaseAction.emit(databaseName);
   }
 
   filterDatabases(searchString: string) {

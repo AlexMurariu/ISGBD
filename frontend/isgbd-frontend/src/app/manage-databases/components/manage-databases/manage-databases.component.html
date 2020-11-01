@@ -2,10 +2,23 @@
   <div class="title">
     Manage databases
   </div>
-  <div class="filter-container" [formGroup]="filterDatabasesForm">
-    <mat-form-field>
-      <input matInput formControlName="searchDatabase" placeholder="Database name" autocomplete="off">
-    </mat-form-field>
+  <div class="filter-container" [formGroup]="databasesForm">
+    <div class="filter-section">
+      <div class="section-title">Search database</div>
+      <mat-form-field>
+        <input matInput formControlName="searchDatabase" placeholder="Database name" autocomplete="off">
+      </mat-form-field>
+    </div>
+    <div>
+      <div class="section-title">Add database</div>
+      <mat-form-field>
+        <input matInput formControlName="addDatabases" placeholder="Database name" autocomplete="off">
+        <button *ngIf="getAddDatabaseControl.value && getAddDatabaseControl.valid" mat-button matSuffix mat-icon-button color="primary" (click)="addDatabase()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <mat-error *ngIf="getAddDatabaseControl.errors?.pattern">Database name is invalid!</mat-error>
+      </mat-form-field>
+    </div>
   </div>
   <div class="content">
     <div *ngIf="databaseIsLoading" class="spinner-container">

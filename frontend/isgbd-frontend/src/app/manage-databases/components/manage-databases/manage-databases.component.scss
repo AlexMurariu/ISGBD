@@ -11,7 +11,10 @@
     }
 
     .filter-container {
-        margin-top: 10px;
+        margin: 20px 0 5px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .content {
@@ -55,4 +58,8 @@
             }
         }
     }
+}
+
+.section-title {
+    font-size: 16px;
 }
