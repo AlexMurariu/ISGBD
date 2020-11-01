@@ -21,7 +21,6 @@ export class HomeComponent implements OnInit {
     }
   
     this.store.pipe(select(fromSelectedDatabase.selectSelectedDatabase)).subscribe((selectedDatabase: string) => {
-      console.log('Da wa')
       this.selectedDatabase = selectedDatabase;
     });
   }

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
-import { filterItems } from 'src/app/shared/helpers/filter-items.helper';
 
 @Component({
   selector: 'app-manage-databases',
@@ -44,7 +43,6 @@ export class ManageDatabasesComponent implements OnInit, OnChanges {
   }
 
   get getAddDatabaseControl() {
-    console.log(this.databasesForm.get('addDatabases').value)
     return this.databasesForm.get('addDatabases');
   }
 
@@ -58,6 +56,7 @@ export class ManageDatabasesComponent implements OnInit, OnChanges {
 
   addDatabase() {
     const databaseName = this.getAddDatabaseControl.value.trim();
+    this.getAddDatabaseControl.patchValue('');
     this.addDatabaseAction.emit(databaseName);
   }
 

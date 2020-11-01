@@ -47,4 +47,8 @@ export class ManageDatabasesShellComponent implements OnInit, OnDestroy {
   deleteDatabase(databaseName: string) {
     console.log("Delete: ", databaseName);
   }
+
+  addDatabase(databaseName: string) {
+    console.log("Add: ", databaseName);
+  }
 }
