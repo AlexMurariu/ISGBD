@@ -76,15 +76,20 @@ app.delete("/database/:name", (req, res) => {
     const databaseFromFile = readFromFile(FILE_NAME);
     const databaseName = req.params.name;
     const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
-
+    console.log(databaseName);
+    console.log(databaseIndex);
     if (databaseIndex === -1) {
+        console.log('Bad')
         res.status(404);
-        res.send("Database not found!");
+        res.send({
+            status: 404,
+            message: 'Database does not exist'
+        });
     } else {
+        console.log('Good');
         databaseFromFile.databases.splice(databaseIndex, 1);
-        res.status(201);
         fs.writeFileSync(FILE_NAME, JSON.stringify(databaseFromFile));
-        res.send("Database was deleted!");
+        res.send({databaseName});
     }
 });
 

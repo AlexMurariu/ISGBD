@@ -34,6 +34,7 @@
             background-color: #b1f1ff;
             padding: 10px;
             border-radius: 5px;
+            margin: 0 10px 10px 10px;
         }
 
         .database-list {
@@ -55,11 +56,6 @@
                 align-items: center;
                 justify-content: space-between;
                 padding-bottom: 5px;
-                
-                &:last-child {
-                    border-bottom: none;
-                    padding-bottom: 0;
-                }
                 
                 .database-name {
                     font-size: 20px;

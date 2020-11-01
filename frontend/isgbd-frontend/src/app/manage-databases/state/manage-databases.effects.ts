@@ -29,9 +29,39 @@ export class ManageDatabasesEffects {
                 ),
                 catchError(err => 
                     of(
-                        new manageDatabasesActions.GetDatabasesFail('Could not load existing databases!'), 
-                        new AddToNotification(NotificationModel.createErrorNotification('', 'Could not load existing databases!'))
+                        new manageDatabasesActions.GetDatabasesFail('Could not load existing databases'), 
+                        new AddToNotification(NotificationModel.createErrorNotification('', 'Could not load existing databases'))
                     )
+                )
+            )
+        )
+    )
+
+    @Effect()
+    deleteDatabase$: Observable<Action> = this.actions$.pipe(
+        ofType(manageDatabasesActions.ManageDatabasesActionTypes.DeleteDatabase),
+        mergeMap((action: manageDatabasesActions.DeleteDatabase) => 
+            this.manageDatabasesService.deleteDatabase(action.payload).pipe(
+                switchMap((databaseName: string) => {
+                        return [
+                            new manageDatabasesActions.DeleteDatabaseSuccess(databaseName),
+                            new AddToNotification(NotificationModel.createSuccessNotification('', 'Database deleted successfully'))
+                        ];
+                    }
+                ),
+                catchError(err => {
+                    if (err.status === 404) {
+                        return of(
+                            new manageDatabasesActions.DeleteDatabaseFail('Database does not exists'), 
+                            new AddToNotification(NotificationModel.createErrorNotification('', 'Database does not exists'))
+                            );
+                    }
+                        
+                    return of(
+                        new manageDatabasesActions.DeleteDatabaseFail('Could not delete database'), 
+                        new AddToNotification(NotificationModel.createErrorNotification('', 'Could not delete database'))
+                        );
+                    }
                 )
             )
         )

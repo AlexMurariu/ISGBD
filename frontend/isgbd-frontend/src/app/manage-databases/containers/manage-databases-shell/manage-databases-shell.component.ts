@@ -1,4 +1,4 @@
-import { GetDatabases } from './../../state/manage-databases.actions';
+import { DeleteDatabase, GetDatabases } from './../../state/manage-databases.actions';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { State } from 'src/app/state';
@@ -45,7 +45,7 @@ export class ManageDatabasesShellComponent implements OnInit, OnDestroy {
   }
 
   deleteDatabase(databaseName: string) {
-    console.log("Delete: ", databaseName);
+    this.store.dispatch(new DeleteDatabase(databaseName));
   }
 
   addDatabase(databaseName: string) {

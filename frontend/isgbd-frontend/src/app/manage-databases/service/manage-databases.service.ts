@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from "@angular/core";
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -20,5 +20,16 @@ export class ManageDatabaseService {
                     return databaseList;
                 })
             )
+    }
+
+    deleteDatabase(databaseName: string): Observable<string> {
+        const url = `${this.baseUrl}/database/${databaseName}`;
+
+        return this.http.delete(url)
+            .pipe(
+                map((deletedDatabase: any) => {
+                    return deletedDatabase.databaseName
+                })
+            );
     }
 }

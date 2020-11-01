@@ -27,7 +27,7 @@
     <div class="no-database-error" *ngIf="databaseList && !databaseList.length">
       There are no databases to display
     </div>
-    <div class="no-database-error" *ngIf="filteredDatabaseList && !filteredDatabaseList.length">
+    <div class="no-database-error" *ngIf="databaseList && databaseList.length && filteredDatabaseList && !filteredDatabaseList.length">
       No search results
     </div>
     <div class="database-list" *ngIf="!databaseIsLoading && databaseList && databaseList.length">
