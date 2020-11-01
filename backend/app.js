@@ -88,12 +88,6 @@ app.delete("/database/:name", (req, res) => {
     }
 });
 
-app.get("/databases", (req, res) => {
-    const databaseFromFile = readFromFile(FILE_NAME);
-    const databaseList = databaseFromFile.databases.map(database => database.dataBaseName);
-    res.send(databaseList);
-});
-
 app.post("/database/:name/table", (req, res) => {
     const databaseFromFile = readFromFile(FILE_NAME);
     const databaseName = req.params.name;
