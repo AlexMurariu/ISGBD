@@ -1,0 +1,27 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$dark-frost-blue: (
+  500:#002d62,
+
+  contrast: (
+    500: $light-primary-text,
+  )
+);
+
+$primaryPalette: mat-palette($dark-frost-blue, 500);
+$accentPalette: mat-palette($mat-pink, A200, A100, A400);
+
+$primary: mat-color($primaryPalette);
+$accent: mat-color($accentPalette);
+
+$infoColor: #059;
+$infoBackgroundColor: #BEF;
+$successColor: #270;
+$successBackgroundColor: #DFF2BF;
+$warningColor: #9F6000;
+$warningBackgroundColor: #FEEFB3;
+$errorColor: #D8000C;
+$errorBackgroundColor: #FFBABA;
+$mainColor: #1a3e70;

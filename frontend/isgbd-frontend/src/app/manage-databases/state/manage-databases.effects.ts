@@ -5,6 +5,8 @@ import { Observable, of } from 'rxjs';
 import { Action } from '@ngrx/store';
 import * as manageDatabasesActions from './manage-databases.actions';
 import { catchError, mergeMap, switchMap } from 'rxjs/operators';
+import { AddToNotification } from 'src/app/state/notification.actions';
+import { NotificationModel } from 'src/app/shared/models/notification.model';
 
 @Injectable()
 export class ManageDatabasesEffects {
@@ -25,7 +27,12 @@ export class ManageDatabasesEffects {
                         ]
                     }
                 ),
-                catchError(err => of(new manageDatabasesActions.GetDatabasesFail('Could not load existing databases!')))
+                catchError(err => 
+                    of(
+                        new manageDatabasesActions.GetDatabasesFail('Could not load existing databases!'), 
+                        new AddToNotification(NotificationModel.createErrorNotification('', 'Could not load existing databases!'))
+                    )
+                )
             )
         )
     )

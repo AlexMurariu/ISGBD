@@ -1,1 +1,9 @@
-<p>manage-databases-shell works!</p>
+<div class="database-list-container">
+  <app-manage-databases
+    [databaseList]="databaseList"
+    [databaseIsLoading]="databaseIsLoading"
+    [getDatabaseListError]="getDatabaseListError"
+    (selectDatabaseAction)="selectDatabase($event)"
+    (deleteDatabaseAction)="deleteDatabase($event)"
+  ></app-manage-databases>
+</div>

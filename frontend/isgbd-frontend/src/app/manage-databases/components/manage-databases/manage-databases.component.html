@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="title">
+    Manage databases
+  </div>
+  <div class="content">
+    <div *ngIf="databaseIsLoading" class="spinner-container">
+      <mat-spinner color="primary"></mat-spinner>
+    </div>
+    <div class="no-database-error" *ngIf="databaseList && !databaseList.length">
+      There are no databases to display!
+    </div>
+    <div class="database-list" *ngIf="!databaseIsLoading && databaseList && databaseList.length">
+      <div class="database-line" *ngFor="let databaseName of databaseList">
+        <div class="database-name">{{databaseName}}</div>
+        <div class="buttons-container">
+          <button class="action-button" mat-raised-button color="primary" (click)="selectDatabase(databaseName)">
+            Select
+          </button>
+          <button class="action-button" mat-raised-button color="warn" (click)="deleteDatabase(databaseName)">
+            <mat-icon aria-hidden="false">delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

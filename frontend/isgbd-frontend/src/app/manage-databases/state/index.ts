@@ -26,3 +26,8 @@ export const getDatabaseListError = createSelector(
     getManageDatabasesFeatureState,
     state => state.manageDatabases.error
 );
+
+export const getDatabaseLoadingStatus = createSelector(
+    getManageDatabasesFeatureState,
+    state => state.manageDatabases.databaseIsLoading
+)
