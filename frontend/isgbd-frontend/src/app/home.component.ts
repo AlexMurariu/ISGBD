@@ -14,14 +14,14 @@ export class HomeComponent implements OnInit {
   constructor(private readonly store: Store, private readonly router: Router) {}
 
   ngOnInit() {
-    if (this.selectedDatabase) {
-        this.router.navigateByUrl(AppRoutes.ViewDatabase);
-    } else {
-        this.router.navigateByUrl(AppRoutes.ManageDatabases);  
-    }
-  
     this.store.pipe(select(fromSelectedDatabase.selectSelectedDatabase)).subscribe((selectedDatabase: string) => {
       this.selectedDatabase = selectedDatabase;
+
+      if (this.selectedDatabase) {
+        this.router.navigateByUrl(AppRoutes.ViewDatabase);
+      } else {
+        this.router.navigateByUrl(AppRoutes.ManageDatabases);  
+      }
     });
   }
 }

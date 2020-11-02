@@ -1,1 +1,10 @@
-<p>view-database-shell works!</p>
+<div class="view-tables-container">
+    <div class="actions-container">
+        <app-actions
+            (findDatabaseAction)="findDatabase()"
+        ></app-actions>
+    </div>
+    <div class="tables-container">
+        <app-view-tables></app-view-tables>
+    </div>
+</div>

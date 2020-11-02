@@ -5,7 +5,7 @@ export interface IDatabaseModel {
     tables: TableModel[];
 }
 
-export class DatabaseModel {
+export class DatabaseModel implements IDatabaseModel {
     dataBaseName: string;
     tables: TableModel[];
 

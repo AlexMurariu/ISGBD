@@ -6,7 +6,10 @@ export enum ManageDatabasesActionTypes {
     GetDatabasesFail = '[Manage Database] GetDatabases Fail',
     DeleteDatabase = '[Manage Database] Delete Database',
     DeleteDatabaseSuccess = '[Manage Database] Delete Database Success',
-    DeleteDatabaseFail = '[Manage Database] Delete Database Fail'
+    DeleteDatabaseFail = '[Manage Database] Delete Database Fail',
+    AddDatabase = '[Manage Database] Add Database',
+    AddDatabaseSuccess = '[Manage Database] Add Database Success',
+    AddDatabaseFail = '[Manage Database] Add Database Fail'
 }
 
 export class GetDatabases implements Action {
@@ -43,9 +46,30 @@ export class DeleteDatabaseFail implements Action {
     constructor(public payload: string) {}
 }
 
+export class AddDatabase implements Action {
+    readonly type = ManageDatabasesActionTypes.AddDatabase;
+
+    constructor(public payload: string) {}
+}
+
+export class AddDatabaseSuccess implements Action {
+    readonly type = ManageDatabasesActionTypes.AddDatabaseSuccess;
+
+    constructor(public payload: string[]) {}
+}
+
+export class AddDatabaseFail implements Action {
+    readonly type = ManageDatabasesActionTypes.AddDatabaseFail;
+
+    constructor(public payload: string) {}
+}
+
 export type ManageDatabasesActions = GetDatabases 
     | GetDatabasesSuccess
     | GetDatabasesFail
     | DeleteDatabase
     | DeleteDatabaseSuccess
-    | DeleteDatabaseFail;
+    | DeleteDatabaseFail
+    | AddDatabase
+    | AddDatabaseSuccess
+    | AddDatabaseFail;

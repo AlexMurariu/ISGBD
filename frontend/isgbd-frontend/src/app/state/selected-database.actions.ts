@@ -9,7 +9,7 @@ export enum SelectedDatabaseActionTypes {
 export class SelectDatabase implements Action {
     readonly type = SelectedDatabaseActionTypes.SelectDatabase;
 
-    constructor(public payload: DatabaseModel) {}
+    constructor(public payload: string) {}
 }
 
 export class ClearSelectedDatabase implements Action {

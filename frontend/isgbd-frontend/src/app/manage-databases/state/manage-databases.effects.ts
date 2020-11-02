@@ -66,4 +66,34 @@ export class ManageDatabasesEffects {
             )
         )
     )
+
+    @Effect()
+    addDatabase$: Observable<Action> = this.actions$.pipe(
+        ofType(manageDatabasesActions.ManageDatabasesActionTypes.AddDatabase),
+        mergeMap((action: manageDatabasesActions.AddDatabase) => 
+            this.manageDatabasesService.addDatabase(action.payload).pipe(
+                switchMap((databaseList: string[]) => {
+                        return [
+                            new manageDatabasesActions.AddDatabaseSuccess(databaseList),
+                            new AddToNotification(NotificationModel.createSuccessNotification('', 'Database added successfully'))
+                        ];
+                    }
+                ),
+                catchError(err => {
+                    if (err.status === 400) {
+                        return of(
+                            new manageDatabasesActions.AddDatabaseFail('Database already exists'), 
+                            new AddToNotification(NotificationModel.createErrorNotification('', 'Database already exists'))
+                            );
+                    }
+                        
+                    return of(
+                        new manageDatabasesActions.AddDatabaseFail('Could not add database'), 
+                        new AddToNotification(NotificationModel.createErrorNotification('', 'Could not add database'))
+                        );
+                    }
+                )
+            )
+        )
+    )
 }

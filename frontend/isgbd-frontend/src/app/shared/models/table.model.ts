@@ -1,11 +1,29 @@
+import { IndexModel } from './index.model';
+import { AttributeModel } from './attribute.model';
+
 export interface ITableModel {
     tableName: string;
+    fileName: string;
+    rowLength: number;
+    attributes: AttributeModel[];
+    primaryKey: string;
+    indexFiles: IndexModel[];
 }
 
-export class TableModel {
+export class TableModel implements TableModel {
     tableName: string;
+    fileName: string;
+    rowLength: number;
+    attributes: AttributeModel[];
+    primaryKey: string;
+    indexFiles: IndexModel[];
 
     constructor(params: ITableModel) {
         this.tableName = params.tableName;
+        this.fileName = params.fileName;
+        this.rowLength = params.rowLength;
+        this.attributes = params.attributes || [];
+        this.primaryKey = params.primaryKey;
+        this.indexFiles = params.indexFiles || [];
     }
 }

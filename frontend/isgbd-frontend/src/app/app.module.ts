@@ -1,5 +1,5 @@
 import { environment } from './../environments/environment.prod';
-import { reducers } from './state';
+import { reducers, metaReducers } from './state';
 import { HomeComponent } from './home.component';
 import { AppEffects } from './app.effects';
 import { AppRoutingModule } from './app-routing.module';
@@ -24,6 +24,7 @@ import { ToastrModule } from 'ngx-toastr';
     CoreModule,
     AppRoutingModule,
     StoreModule.forRoot(reducers, {
+      metaReducers,
       runtimeChecks: {
         strictStateImmutability: true,
         strictActionImmutability: true

@@ -1,9 +1,10 @@
-import { DeleteDatabase, GetDatabases } from './../../state/manage-databases.actions';
+import { AddDatabase, DeleteDatabase, GetDatabases } from './../../state/manage-databases.actions';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { State } from 'src/app/state';
 import { Subscription } from 'rxjs';
 import * as fromManageDatabases from '../../state';
+import { ClearSelectedDatabase, SelectDatabase } from 'src/app/state/selected-database.actions';
 
 @Component({
   selector: 'app-manage-databases-shell',
@@ -20,6 +21,7 @@ export class ManageDatabasesShellComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.store.dispatch(new GetDatabases());
+    this.store.dispatch(new ClearSelectedDatabase());
     
     this.subscriptions.push(
       this.store.pipe(select(fromManageDatabases.getDatabaseList)).subscribe((databaseList: string[]) => {
@@ -41,7 +43,7 @@ export class ManageDatabasesShellComponent implements OnInit, OnDestroy {
   }
 
   selectDatabase(databaseName: string) {
-    console.log("Select: ", databaseName);
+    this.store.dispatch(new SelectDatabase(databaseName));
   }
 
   deleteDatabase(databaseName: string) {
@@ -49,6 +51,6 @@ export class ManageDatabasesShellComponent implements OnInit, OnDestroy {
   }
 
   addDatabase(databaseName: string) {
-    console.log("Add: ", databaseName);
+    this.store.dispatch(new AddDatabase(databaseName));
   }
 }

@@ -1,0 +1,17 @@
+.view-tables-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    
+    .actions-container {
+        width: 50%;
+        margin-bottom: 25px;
+    }
+    
+    .tables-container {
+        width: 50%;
+        margin-top: 25px;
+    }
+}

@@ -2,12 +2,21 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const utils = require("./utils");
+const cors = require('cors');
 const { table } = require("console");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
   
+app.use(cors());
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    next();
+});
+
 if (!module.parent) {
     const port = process.env.PORT || 3001;
     app.listen(port, () => {
@@ -23,12 +32,6 @@ function readFromFile(fileName) {
 
     return database;
 }
-
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-    next();
-});
 
 app.get("/databases", (req, res) => {
     const databaseFromFile = readFromFile(FILE_NAME);
@@ -68,7 +71,9 @@ app.post("/database", (req, res) => {
     } else {
         databaseFromFile.databases.push(newDatabase);
         fs.writeFileSync(FILE_NAME, JSON.stringify(databaseFromFile));
-        res.send('Database was added!');
+
+        const databaseList = databaseFromFile.databases.map(database => database.dataBaseName);
+        res.send(databaseList);
     }
 });
 
@@ -76,8 +81,7 @@ app.delete("/database/:name", (req, res) => {
     const databaseFromFile = readFromFile(FILE_NAME);
     const databaseName = req.params.name;
     const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
-    console.log(databaseName);
-    console.log(databaseIndex);
+ 
     if (databaseIndex === -1) {
         console.log('Bad')
         res.status(404);

@@ -12,15 +12,13 @@ export function selectedDatabaseReducer(state = initialState, action: SelectedDa
         case SelectedDatabaseActionTypes.SelectDatabase:
             return {
                 ...state,
-                selectedDatabase: action.payload.dataBaseName,
-                tables: action.payload.tables
+                selectedDatabase: action.payload
             };
         
         case SelectedDatabaseActionTypes.ClearSelectedDatabase:
             return {
                 ...state,
-                selectedDatabase: '',
-                tables: null
+                selectedDatabase: ''
             };
 
         default:
