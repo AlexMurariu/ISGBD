@@ -13,6 +13,7 @@ import { ViewTablesComponent } from './components/view-tables/view-tables.compon
 import { TableComponent } from './components/table/table.component';
 import { AddTableComponent } from './components/add-table/add-table.component';
 import { DisplayTableComponent } from './components/display-table/display-table.component';
+import { CreateIndexComponent } from './components/create-index/create-index.component';
 
 
 
@@ -23,7 +24,7 @@ import { DisplayTableComponent } from './components/display-table/display-table.
     ViewTablesComponent, 
     TableComponent, 
     AddTableComponent, 
-    DisplayTableComponent
+    DisplayTableComponent, CreateIndexComponent
   ],
   imports: [
     CommonModule,
@@ -36,7 +37,8 @@ import { DisplayTableComponent } from './components/display-table/display-table.
   ],
   entryComponents: [
     AddTableComponent,
-    DisplayTableComponent
+    DisplayTableComponent,
+    CreateIndexComponent
   ]
 })
 export class ViewDatabaseModule { }

@@ -3,6 +3,7 @@ import { debounceTime } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { CreateIndexComponent } from '../create-index/create-index.component';
 
 @Component({
   selector: 'app-actions',
@@ -39,6 +40,17 @@ export class ActionsComponent implements OnInit {
 
   openAddTableDialog() {
     this.dialog.open(AddTableComponent, {
+      minWidth: "90%",
+      maxHeight: '98vh',
+      disableClose: true,
+      data: {
+        
+      }
+    })
+  }
+
+  openCreateIndexDialog() {
+    this.dialog.open(CreateIndexComponent, {
       minWidth: "90%",
       maxHeight: '98vh',
       disableClose: true,
