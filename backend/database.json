@@ -38,7 +38,7 @@
                         {
                             "referencedTableName": "company",
                             "referencedAttributeName": "country",
-                            "attributeName": "price" 
+                            "attributeName": "price"
                         }
                     ],
                     "indexFiles": [

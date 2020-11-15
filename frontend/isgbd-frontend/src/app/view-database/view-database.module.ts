@@ -11,11 +11,12 @@ import { StoreModule } from '@ngrx/store';
 import { ActionsComponent } from './components/actions/actions.component';
 import { ViewTablesComponent } from './components/view-tables/view-tables.component';
 import { TableComponent } from './components/table/table.component';
+import { AddTableComponent } from './components/add-table/add-table.component';
 
 
 
 @NgModule({
-  declarations: [ViewDatabaseShellComponent, ActionsComponent, ViewTablesComponent, TableComponent],
+  declarations: [ViewDatabaseShellComponent, ActionsComponent, ViewTablesComponent, TableComponent, AddTableComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -24,6 +25,9 @@ import { TableComponent } from './components/table/table.component';
       [ViewDatabaseEffects]
     ),
     RouterModule.forChild(ViewDatabaseRoute)
+  ],
+  entryComponents: [
+    AddTableComponent
   ]
 })
 export class ViewDatabaseModule { }

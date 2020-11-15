@@ -1,6 +1,8 @@
+import { AddTableComponent } from './../add-table/add-table.component';
 import { debounceTime } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-actions',
@@ -13,7 +15,8 @@ export class ActionsComponent implements OnInit {
 
   @Output() findDatabaseAction: EventEmitter<any> = new EventEmitter<any>();
   @Output() filterTablesList: EventEmitter<string> = new EventEmitter<string>();
-  constructor(private readonly fb: FormBuilder) { }
+
+  constructor(private readonly fb: FormBuilder, private readonly dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.tablesForm = this.fb.group({
@@ -32,5 +35,16 @@ export class ActionsComponent implements OnInit {
 
   findDatabase() {
     this.findDatabaseAction.emit();
+  }
+
+  openAddTableDialog() {
+    this.dialog.open(AddTableComponent, {
+      minWidth: "90%",
+      maxHeight: '98vh',
+      disableClose: true,
+      data: {
+        
+      }
+    })
   }
 }

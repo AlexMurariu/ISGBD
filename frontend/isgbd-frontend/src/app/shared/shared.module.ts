@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatDialogModule} from '@angular/material/dialog';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -17,6 +18,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     MatProgressSpinnerModule,
     MatInputModule,
     MatFormFieldModule,
+    MatDialogModule,
     FormsModule,
     ReactiveFormsModule
   ],
@@ -28,6 +30,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     MatProgressSpinnerModule,
     MatInputModule,
     MatFormFieldModule,
+    MatDialogModule,
     FormsModule,
     ReactiveFormsModule
   ]

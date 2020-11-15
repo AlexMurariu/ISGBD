@@ -1,0 +1,10 @@
+<div class='dialog-container'>
+    <div class='dialog-title' *ngIf="data?.title">{{data?.title}}</div>
+    <div class='dialog-content' *ngIf="data?.message">
+        <p class="multi_lines_text" [innerHTML]="data?.message"></p>
+    </div>
+    <div class='dialog-actions'>
+        <button mat-raised-button class="close-button" (click)="cancel()" *ngIf="data?.cancelButton">{{data?.cancelButton}}</button>
+        <button mat-raised-button color='primary' (click)="confirm()" *ngIf="data?.confirmButton">{{data?.confirmButton}}</button>
+    </div>
+</div>

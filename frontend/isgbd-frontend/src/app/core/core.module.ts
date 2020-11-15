@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NotificatorComponent } from './components/notificator/notificator.component';
 import { MainLayoutComponent } from './main-layout/main-layout/main-layout.component';
+import { ConfirmationPopupComponent } from './components/confirmation-popup/confirmation-popup.component';
 
 
 
 @NgModule({
-  declarations: [NotificatorComponent, MainLayoutComponent],
+  declarations: [NotificatorComponent, MainLayoutComponent, ConfirmationPopupComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -18,6 +19,9 @@ import { MainLayoutComponent } from './main-layout/main-layout/main-layout.compo
   ],
   exports: [
     MainLayoutComponent
+  ],
+  entryComponents: [
+    ConfirmationPopupComponent
   ]
 })
 export class CoreModule { }
