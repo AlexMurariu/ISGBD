@@ -12,11 +12,19 @@ import { ActionsComponent } from './components/actions/actions.component';
 import { ViewTablesComponent } from './components/view-tables/view-tables.component';
 import { TableComponent } from './components/table/table.component';
 import { AddTableComponent } from './components/add-table/add-table.component';
+import { DisplayTableComponent } from './components/display-table/display-table.component';
 
 
 
 @NgModule({
-  declarations: [ViewDatabaseShellComponent, ActionsComponent, ViewTablesComponent, TableComponent, AddTableComponent],
+  declarations: [
+    ViewDatabaseShellComponent, 
+    ActionsComponent, 
+    ViewTablesComponent, 
+    TableComponent, 
+    AddTableComponent, 
+    DisplayTableComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,
@@ -27,7 +35,8 @@ import { AddTableComponent } from './components/add-table/add-table.component';
     RouterModule.forChild(ViewDatabaseRoute)
   ],
   entryComponents: [
-    AddTableComponent
+    AddTableComponent,
+    DisplayTableComponent
   ]
 })
 export class ViewDatabaseModule { }
