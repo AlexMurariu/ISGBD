@@ -1,10 +1,19 @@
 <div class="view-tables-container">
     <div class="actions-container">
         <app-actions
+            (filterTablesList)="filterTablesList($event)"
             (findDatabaseAction)="findDatabase()"
-        ></app-actions>
+        >
+        </app-actions>
     </div>
     <div class="tables-container">
-        <app-view-tables></app-view-tables>
+        <app-view-tables
+            *ngIf="tablesList && tablesList.length"
+            [tablesList]="filteredTablesList"
+        >
+        </app-view-tables>
+        <div class="no-tables-message"*ngIf="!tablesList || !tablesList.length">
+            There are no tables to display!
+        </div>
     </div>
 </div>

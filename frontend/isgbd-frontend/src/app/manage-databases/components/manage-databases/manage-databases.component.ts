@@ -26,7 +26,7 @@ export class ManageDatabasesComponent implements OnInit, OnChanges {
       addDatabases: ['', [Validators.pattern("^[a-zA-Z][a-zA-Z0-9]*[a-zA-Z0-9]$")]]
     });
 
-    this.getSearchDatabaseControl.valueChanges.pipe(debounceTime(500))
+    this.searchDatabaseControl.valueChanges.pipe(debounceTime(500))
     .subscribe((searchString: string) => {
       this.filteredDatabaseList = this.filterDatabases(searchString);
     });
@@ -38,11 +38,11 @@ export class ManageDatabasesComponent implements OnInit, OnChanges {
     }
   }
 
-  get getSearchDatabaseControl() {
+  get searchDatabaseControl() {
     return this.databasesForm.get('searchDatabase');
   }
 
-  get getAddDatabaseControl() {
+  get addDatabaseControl() {
     return this.databasesForm.get('addDatabases');
   }
 
@@ -55,8 +55,8 @@ export class ManageDatabasesComponent implements OnInit, OnChanges {
   }
 
   addDatabase() {
-    const databaseName = this.getAddDatabaseControl.value.trim();
-    this.getAddDatabaseControl.patchValue('');
+    const databaseName = this.addDatabaseControl.value.trim();
+    this.addDatabaseControl.patchValue('');
     this.addDatabaseAction.emit(databaseName);
   }
 
@@ -78,5 +78,9 @@ export class ManageDatabasesComponent implements OnInit, OnChanges {
 
       return true;
     })
+  }
+
+  onFileChange(event) {
+    console.log(event.target.files)
   }
 }

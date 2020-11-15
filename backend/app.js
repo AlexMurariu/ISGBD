@@ -83,14 +83,12 @@ app.delete("/database/:name", (req, res) => {
     const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
  
     if (databaseIndex === -1) {
-        console.log('Bad')
         res.status(404);
         res.send({
             status: 404,
             message: 'Database does not exist'
         });
     } else {
-        console.log('Good');
         databaseFromFile.databases.splice(databaseIndex, 1);
         fs.writeFileSync(FILE_NAME, JSON.stringify(databaseFromFile));
         res.send({databaseName});

@@ -13,10 +13,10 @@
       <div class="section-title">Add database</div>
       <mat-form-field>
         <input matInput formControlName="addDatabases" placeholder="Database name" autocomplete="off">
-        <button *ngIf="getAddDatabaseControl.value && getAddDatabaseControl.valid" mat-button matSuffix mat-icon-button color="primary" (click)="addDatabase()">
+        <button *ngIf="addDatabaseControl.value && addDatabaseControl.valid" mat-button matSuffix mat-icon-button color="primary" (click)="addDatabase()">
           <mat-icon>add</mat-icon>
         </button>
-        <mat-error *ngIf="getAddDatabaseControl.errors?.pattern">Database name is invalid!</mat-error>
+        <mat-error *ngIf="addDatabaseControl.errors?.pattern">Database name is invalid!</mat-error>
       </mat-form-field>
     </div>
   </div>

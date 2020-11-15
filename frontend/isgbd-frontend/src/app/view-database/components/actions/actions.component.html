@@ -1,6 +1,15 @@
 <div class="container">
-    Actions
-    <button mat-raised-button color="primary" (click)="findDatabase()">
-        Find Database
-    </button>
+    <div [formGroup]="tablesForm">
+        <mat-form-field class="filter-input">
+          <input matInput formControlName="searchTable" placeholder="Search table by name" autocomplete="off">
+        </mat-form-field>
+      </div>
+    <div class="action-button-container">
+        <button class="action-button" mat-raised-button color="primary">
+            Add table
+        </button>
+        <button class="action-button" mat-raised-button color="primary" (click)="findDatabase()">
+            Find Database
+        </button>
+    </div>
 </div>

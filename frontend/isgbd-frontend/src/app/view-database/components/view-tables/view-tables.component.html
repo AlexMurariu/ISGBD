@@ -1,3 +1,11 @@
 <div class="container">
-    Tables
+    <div class="no-tables-error" *ngIf="tablesList && !tablesList.length">
+        No search results 
+    </div>
+    <div *ngFor="let table of tablesList">
+        <app-table
+            [table]="table"
+        >
+        </app-table>
+    </div>
 </div>

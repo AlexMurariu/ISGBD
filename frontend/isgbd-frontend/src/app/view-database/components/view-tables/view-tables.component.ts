@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { TableModel } from 'src/app/shared/models';
 
 @Component({
   selector: 'app-view-tables',
@@ -6,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./view-tables.component.scss']
 })
 export class ViewTablesComponent implements OnInit {
-
+  @Input() tablesList: TableModel[];
+  
   constructor() { }
 
   ngOnInit(): void {
