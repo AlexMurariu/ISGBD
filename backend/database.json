@@ -34,7 +34,7 @@
                         }
                     ],
                     "primaryKey": "id_supercar",
-                    "foreignKey": [
+                    "foreignKeys": [
                         {
                             "referencedTableName": "company",
                             "referencedAttributeName": "country",
@@ -90,6 +90,7 @@
                         }
                     ],
                     "primaryKey": "id_company",
+                    "foreignKeys": [],
                     "indexFiles": []
                 },
                 {
@@ -129,6 +130,7 @@
                         }
                     ],
                     "primaryKey": "id_supercar",
+                    "foreignKeys": [],
                     "indexFiles": []
                 }
             ]

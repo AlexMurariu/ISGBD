@@ -1,3 +1,4 @@
+import { TableModel } from 'src/app/shared/models';
 import { ViewDatabaseActions, ViewDatabaseActionTypes } from './view-database.actions';
 import { ViewDatabaseState } from "./view-database.state";
 
@@ -28,6 +29,18 @@ export function reducer(state = initialState, action: ViewDatabaseActions): View
                 tablesListIsLoading: false,
                 error: action.payload
             }
+        
+        case ViewDatabaseActionTypes.DropTableSuccess: {
+            const tableName = action.payload;
+            let tablesList = [ ...state.tablesList ];
+
+            tablesList = tablesList.filter((table: TableModel) => table.tableName !== tableName);
+
+            return {
+                ...state,
+                tablesList
+            }
+        }
 
         default:
             return state;

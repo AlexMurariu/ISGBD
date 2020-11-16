@@ -132,10 +132,16 @@ app.delete("/database/:databaseName/table/:tableName", (req, res) => {
         const tableList = databaseFromFile.databases[databaseIndex].tables;
         const tableIndex = utils.findItemInList(tableList, 'tableName', tableName);
 
+        if (tableList[tableIndex].foreignKeys.length) {
+            res.status(405);
+            res.send("Can't delete table, check if there are other tables referenced by the foreign key!");
+            return;
+        }    
+        
         if (tableIndex !== -1) {
             databaseFromFile.databases[databaseIndex].tables.splice(tableIndex, 1);
             fs.writeFileSync(FILE_NAME, JSON.stringify(databaseFromFile));
-            res.send('Table deleted succesfully!')
+            res.send({tableName});
         } else {
             res.status(404);
             res.send('Table not found!');

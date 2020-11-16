@@ -36,4 +36,32 @@ export class ViewDatabaseEffects {
             )
         )
     )
+
+    @Effect()
+    dropTable$: Observable<Action> = this.actions$.pipe(
+        ofType(viewDatabaseActions.ViewDatabaseActionTypes.DropTable),
+        mergeMap((action: viewDatabaseActions.DropTable) => 
+            this.viewDatabaseService.dropTable(action.payload.databaseName, action.payload.tableName).pipe(
+                switchMap((tableName: string) => {
+                        return [
+                            new viewDatabaseActions.DropTableSuccess(tableName)
+                        ]
+                    }
+                ),
+                catchError(err =>  {
+                    if (err.status === 405) {
+                        return of(
+                            new viewDatabaseActions.DropTableFail("Can't delete table, check if there are other tables referenced by the foreign key!"),
+                            new AddToNotification(NotificationModel.createErrorNotification('', "Can't delete table, check if there are other tables referenced by the foreign key!"))
+                        )
+                    }
+                    return of(
+                        new viewDatabaseActions.DropTableFail('Table does not exist in database!'),
+                        new AddToNotification(NotificationModel.createErrorNotification('', 'Table does not exist in database!'))
+                        )
+                    }
+                )
+            )
+        )
+    )
 }

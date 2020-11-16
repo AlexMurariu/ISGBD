@@ -5,6 +5,7 @@
     <div *ngFor="let table of tablesList">
         <app-table
             [table]="table"
+            (dropTableAction)="dropTable($event)"
         >
         </app-table>
     </div>

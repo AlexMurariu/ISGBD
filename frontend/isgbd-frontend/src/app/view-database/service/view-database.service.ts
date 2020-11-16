@@ -22,4 +22,15 @@ export class ViewDatabaseService {
                 })
             )
     }
+
+    dropTable(databaseName:string, tableName: string): Observable<string> {
+        const url = `${this.baseUrl}/database/${databaseName}/table/${tableName}`;
+
+        return this.http.delete<string>(url)
+            .pipe(
+                map((deletedTableName: any) => {
+                    return deletedTableName.tableName;
+                })
+            )
+    }
 }

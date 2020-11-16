@@ -35,17 +35,6 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
       this.store.pipe(select(fromViewDatabase.getTablesList)).subscribe((tablesList: TableModel[]) => {
         this.tablesList = tablesList;
         this.filteredTablesList = tablesList;
-        // if (tablesList) {
-        //   for (let i = 0; i < tablesList.length; i++) {
-        //     this.tablesList.push(tablesList[i]);
-        //     this.tablesList.push(tablesList[i]);
-        //     this.tablesList.push(tablesList[i]);
-        //     this.tablesList.push(tablesList[i]);
-        //     this.tablesList.push(tablesList[i]);
-        //     this.tablesList.push(tablesList[i]);
-        //     this.tablesList.push(tablesList[i]);
-        //   }
-        // }
       }),
       this.store.pipe(select(fromViewDatabase.getTablesListLoadingStatus)).subscribe((getTablesListLoadInProgress: boolean) => {
         this.getTablesListLoadInProgress = getTablesListLoadInProgress;

@@ -1,5 +1,5 @@
 import { UIService } from './../../../core/services/ui.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TableModel } from 'src/app/shared/models';
 import { MatDialog } from '@angular/material/dialog';
 import { DisplayTableComponent } from '../display-table/display-table.component';
@@ -9,21 +9,27 @@ import { DisplayTableComponent } from '../display-table/display-table.component'
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
-export class TableComponent implements OnInit {
+export class TableComponent {
   @Input() table: TableModel;
+  @Output() dropTableAction: EventEmitter<string> = new EventEmitter<string>();
   
-  constructor(private readonly uiServie: UIService, private readonly dialog: MatDialog) { }
-
-  ngOnInit(): void {
-  }
+  constructor(
+    private readonly uiServie: UIService, 
+    private readonly dialog: MatDialog
+  ) { }
 
   openDeleteTablePopup() {
     this.uiServie.showConfirmationPopup({
       title: 'Drop table',
       message: 'Are you sure you want to drop this table?',
       confirmButtonText: 'Ok',
-      cancelButtonText: 'Cancel'
+      cancelButtonText: 'Cancel',
+      confirmCallback: this.deleteTable
     })
+  }
+
+  deleteTable = () => {
+    this.dropTableAction.emit(this.table.tableName);
   }
 
   openDisplayTablePopup() {
