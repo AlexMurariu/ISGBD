@@ -51,6 +51,54 @@
             </div> 
         </div>
     </div>
+    <div class="foreign-key-form-container" *ngIf="columns.length && data.tablesList.length">
+        <div class="foreign-key-form-title">Create foreign key</div>
+        <div class="foreign-key-form" [formGroup]="foreignKeyControl">
+            <mat-form-field class="foreign-key-form-field">
+                <mat-label>Attribute</mat-label>
+                <mat-select formControlName="attributeName">
+                    <mat-option *ngFor="let column of columns" [value]="column.name">
+                        {{ column.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="foreignKeyControl.controls.attributeName.errors?.required">Attribute is required!</mat-error>
+            </mat-form-field>
+            <mat-form-field class="foreign-key-form-field">
+                <mat-label>Referenced table</mat-label>
+                <mat-select formControlName="referencedTableName">
+                    <mat-option *ngFor="let table of data.tablesList" [value]="table.tableName">
+                        {{ table.tableName }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="foreignKeyControl.controls.referencedTableName.errors?.required">Referenced table is required!</mat-error>
+            </mat-form-field>
+            <mat-form-field class="foreign-key-form-field">
+                <mat-label>Referenced attribute</mat-label>
+                <mat-select formControlName="referencedAttributeName" [disabled]="!listOfAttributes.length">
+                    <mat-option *ngFor="let attribute of listOfAttributes" [value]="attribute.attributeName">
+                        {{ attribute.attributeName }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="foreignKeyControl.controls.referencedAttributeName.errors?.required">Referenced attribute is required!</mat-error>
+            </mat-form-field>
+            <button class="foreign-key-form-field" mat-icon-button [disabled]="disableAddForeignKeyButton" (click)="addForeignKey()">
+                <mat-icon color="primary">add_box</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div *ngIf="foreignKeys.length" class="foreign-key-container">
+        <div class="foreign-key-header">Foreign keys</div>
+        <div class="foreign-key-list">
+            <div class="foreign-key" *ngFor="let foreignKey of foreignKeys">
+                <div class="foreign-key-element">
+                    Column {{foreignKey.attributeName}} references column {{foreignKey.referencedAttributeName}} from {{foreignKey.referencedTableName}} table
+                    <button mat-icon-button class="remove-foreign-key-button" (click)="removeForeignKey(foreignKey)">
+                        <mat-icon color="primary">close</mat-icon>
+                    </button>
+                </div>
+            </div> 
+        </div>
+    </div>
     <div class="buttons-container">
         <button mat-raised-button (click)="cancel()">Cancel</button>
         <button class="add-button" mat-raised-button color="primary" [disabled]="disableCreateButton" (click)="createTable()">Create</button>

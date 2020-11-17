@@ -3,6 +3,8 @@
         <app-actions
             (filterTablesList)="filterTablesList($event)"
             (findDatabaseAction)="findDatabase()"
+            (createTableAction)="openAddTableDialog()"
+            (createIndexAction)="openCreateIndexDialog()"
         >
         </app-actions>
     </div>

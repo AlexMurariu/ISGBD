@@ -21,7 +21,6 @@ export class UIService {
       closeCallback?: any,
       cancelCallback?: any,
       automatedClosing?: boolean,
-      errorMessageSelector?: Observable<string>
     }) {
         const { title, message, confirmButtonText, cancelButtonText, confirmCallback, cancelCallback, closeCallback } = params;
 

@@ -1,8 +1,9 @@
 import { State } from './../../state/index';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TableModel } from 'src/app/shared/models';
 import { DropTable } from '../../state/view-database.actions';
+
 
 @Component({
   selector: 'app-view-tables',

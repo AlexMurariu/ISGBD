@@ -1,9 +1,6 @@
-import { AddTableComponent } from './../add-table/add-table.component';
 import { debounceTime } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { CreateIndexComponent } from '../create-index/create-index.component';
 
 @Component({
   selector: 'app-actions',
@@ -13,11 +10,12 @@ import { CreateIndexComponent } from '../create-index/create-index.component';
 export class ActionsComponent implements OnInit {
   tablesForm: FormGroup;
 
-
   @Output() findDatabaseAction: EventEmitter<any> = new EventEmitter<any>();
   @Output() filterTablesList: EventEmitter<string> = new EventEmitter<string>();
+  @Output() createTableAction: EventEmitter<any> = new EventEmitter<any>();
+  @Output() createIndexAction: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private readonly fb: FormBuilder, private readonly dialog: MatDialog) { }
+  constructor(private readonly fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.tablesForm = this.fb.group({
@@ -38,25 +36,11 @@ export class ActionsComponent implements OnInit {
     this.findDatabaseAction.emit();
   }
 
-  openAddTableDialog() {
-    this.dialog.open(AddTableComponent, {
-      minWidth: "90%",
-      maxHeight: '98vh',
-      disableClose: true,
-      data: {
-        
-      }
-    })
+  createTable() {
+    this.createTableAction.emit();
   }
 
-  openCreateIndexDialog() {
-    this.dialog.open(CreateIndexComponent, {
-      minWidth: "90%",
-      maxHeight: '98vh',
-      disableClose: true,
-      data: {
-        
-      }
-    })
+  createIndex() {
+    this.createIndexAction.emit();
   }
 }

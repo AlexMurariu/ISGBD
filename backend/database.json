@@ -36,7 +36,9 @@
                             "isUnique": "0"
                         }
                     ],
-                    "primaryKey": [ "id_supercar" ],
+                    "primaryKey": [
+                        "id_supercar"
+                    ],
                     "foreignKeys": [
                         {
                             "referencedTableName": "company",
@@ -95,7 +97,9 @@
                             "isUnique": "0"
                         }
                     ],
-                    "primaryKey": [ "id_company" ],
+                    "primaryKey": [
+                        "id_company"
+                    ],
                     "foreignKeys": [],
                     "indexFiles": []
                 },
@@ -140,7 +144,9 @@
                             "isUnique": "0"
                         }
                     ],
-                    "primaryKey": [ "id_supercar" ],
+                    "primaryKey": [
+                        "id_supercar"
+                    ],
                     "foreignKeys": [],
                     "indexFiles": []
                 }
@@ -184,10 +190,6 @@
         },
         {
             "dataBaseName": "Ship15",
-            "tables": []
-        },
-        {
-            "dataBaseName": "Ships123",
             "tables": []
         }
     ]

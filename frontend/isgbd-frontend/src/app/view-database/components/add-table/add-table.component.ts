@@ -1,11 +1,13 @@
 import { AttributeModel } from './../../../shared/models/attribute.model';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TableModel } from 'src/app/shared/models';
+import { ForeignKeyModel } from 'src/app/shared/models/foreignKey.model';
 
 interface DialogData {
-  
+  tablesList: TableModel[],
+  createTableCallback: any
 }
 
 @Component({
@@ -16,10 +18,9 @@ interface DialogData {
 export class AddTableComponent implements OnInit {
   createTableForm: FormGroup;
   columns = [];
-  types = ['integer', 'varchar', 'char']
+  foreignKeys = [];
+  types = ['integer', 'varchar', 'char'];
 
-  @Output() createTableAction: EventEmitter<TableModel> = new EventEmitter<TableModel>();
-  
   constructor(
     private readonly fb: FormBuilder,
     public readonly dialogRef: MatDialogRef<AddTableComponent>, 
@@ -36,12 +37,21 @@ export class AddTableComponent implements OnInit {
         primaryKey: [false],
         isNull: [false],
         isUnique: [false]
+      }),
+      foreignKey: this.fb.group({
+        attributeName: ['', [Validators.required]],
+        referencedTableName: ['', Validators.required],
+        referencedAttributeName: ['', Validators.required]
       })
     })
   }
 
   get columnControl() {
     return this.createTableForm.get('column') as FormGroup;
+  }
+
+  get foreignKeyControl() {
+    return this.createTableForm.get('foreignKey') as FormGroup;
   }
 
   get disableCreateButton() {
@@ -52,10 +62,32 @@ export class AddTableComponent implements OnInit {
     return !this.columnControl.controls.name.valid || !this.columnControl.controls.type.valid || !this.columnControl.controls.length.valid;
   }
 
+  get disableAddForeignKeyButton() {
+    return !this.foreignKeyControl.valid;
+  }
+
+  get listOfAttributes() {
+    const tableName = this.foreignKeyControl.controls.referencedTableName.value;
+
+    if (tableName) {
+      return this.data.tablesList.find((table: TableModel) => table.tableName === tableName).attributes;
+    }
+
+    return [];
+  }
+
   addColumn() {
     this.columnControl.markAllAsTouched();
     this.columns.push(this.columnControl.value);
     this.columnControl.reset();
+  }
+
+  addForeignKey() {
+    const foreignKey = new ForeignKeyModel(this.foreignKeyControl.value);
+
+    this.foreignKeyControl.markAllAsTouched();
+    this.foreignKeys.push(foreignKey);
+    this.foreignKeyControl.reset();
   }
 
   cancel() {
@@ -64,6 +96,15 @@ export class AddTableComponent implements OnInit {
 
   removeColumn(columnName: string) {
     this.columns = this.columns.filter((column: any) => column.name !== columnName);
+  }
+
+  removeForeignKey(deletedForeignKey: ForeignKeyModel) {
+    this.foreignKeys = this.foreignKeys
+      .filter(
+        (foreignKey: ForeignKeyModel) => foreignKey.attributeName !== deletedForeignKey.attributeName && 
+                                         foreignKey.referencedTableName !== deletedForeignKey.referencedTableName && 
+                                         foreignKey.referencedAttributeName !== deletedForeignKey.referencedAttributeName
+      );
   }
 
   createTable() {
@@ -90,9 +131,11 @@ export class AddTableComponent implements OnInit {
       rowLength: null,
       attributes,
       primaryKey,
-      foreignKeys: [],
+      foreignKeys: this.foreignKeys,
       indexFiles: []
     });
+
+    this.data.createTableCallback(table);
   }
 
   columnNameValidator(): ValidatorFn {

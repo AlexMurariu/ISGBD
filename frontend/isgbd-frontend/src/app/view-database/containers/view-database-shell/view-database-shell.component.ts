@@ -1,3 +1,4 @@
+import { AddTableComponent } from './../../components/add-table/add-table.component';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -7,6 +8,8 @@ import * as fromViewDatabase from '../../state';
 import * as fromSelectedDatabase from '../../../state/selected-database.selectors';
 import { GetDatabaseTables } from '../../state/view-database.actions';
 import { ClearSelectedDatabase } from 'src/app/state/selected-database.actions';
+import { CreateIndexComponent } from '../../components/create-index/create-index.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-view-database-shell',
@@ -21,7 +24,7 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
-  constructor(private readonly store: Store<State>) { }
+  constructor(private readonly store: Store<State>, private readonly dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.subscriptions.push(
@@ -74,5 +77,32 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
 
   findDatabase() {
     this.store.dispatch(new ClearSelectedDatabase());
+  }
+
+  openAddTableDialog() {
+    this.dialog.open(AddTableComponent, {
+      minWidth: "90%",
+      maxHeight: '98vh',
+      disableClose: true,
+      data: {
+        tablesList: this.tablesList,
+        createTableCallback: this.createTable 
+      }
+    })
+  }
+
+  createTable = (table: TableModel) => {
+    console.log(table);
+  }
+
+  openCreateIndexDialog() {
+    this.dialog.open(CreateIndexComponent, {
+      minWidth: "90%",
+      maxHeight: '98vh',
+      disableClose: true,
+      data: {
+        
+      }
+    })
   }
 }
