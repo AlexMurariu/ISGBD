@@ -111,7 +111,7 @@ app.post("/database/:name/table", (req, res) => {
         if (tableIndex === -1) {
             databaseFromFile.databases[databaseIndex].tables.push(insertedTable);
             fs.writeFileSync(FILE_NAME, JSON.stringify(databaseFromFile));
-            res.send('Table was added!');
+            res.send(databaseFromFile.databases[databaseIndex].tables);
         } else {
             res.status(400);
             res.send('Table name was already in the database');    

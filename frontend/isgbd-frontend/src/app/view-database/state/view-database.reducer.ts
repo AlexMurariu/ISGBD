@@ -42,6 +42,12 @@ export function reducer(state = initialState, action: ViewDatabaseActions): View
             }
         }
 
+        case ViewDatabaseActionTypes.CreateTableSuccess: 
+            return {
+                ...state,
+                tablesList: action.payload
+            }
+
         default:
             return state;
     }

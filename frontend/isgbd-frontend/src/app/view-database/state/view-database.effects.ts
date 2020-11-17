@@ -64,4 +64,32 @@ export class ViewDatabaseEffects {
             )
         )
     )
+
+    @Effect()
+    createTable$: Observable<Action> = this.actions$.pipe(
+        ofType(viewDatabaseActions.ViewDatabaseActionTypes.CreateTable),
+        mergeMap((action: viewDatabaseActions.CreateTable) => 
+            this.viewDatabaseService.createTable(action.payload.databaseName, action.payload.table).pipe(
+                switchMap((tableList: TableModel[]) => {
+                        return [
+                            new viewDatabaseActions.CreateTableSuccess(tableList)
+                        ]
+                    }
+                ),
+                catchError(err =>  {
+                    if (err.status === 400) {
+                        return of (
+                            new viewDatabaseActions.CreateTableFail("Table already exists!"),
+                            new AddToNotification(NotificationModel.createErrorNotification('', "Table already exists!"))
+                            )
+                    }
+                    return of(
+                        new viewDatabaseActions.CreateTableFail("Can't create table!"),
+                        new AddToNotification(NotificationModel.createErrorNotification('', "Can't create table!"))
+                        )
+                    }
+                )
+            )
+        )
+    )
 }

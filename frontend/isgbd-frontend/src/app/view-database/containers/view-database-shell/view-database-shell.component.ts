@@ -6,10 +6,10 @@ import { TableModel } from 'src/app/shared/models';
 import { State } from 'src/app/state';
 import * as fromViewDatabase from '../../state';
 import * as fromSelectedDatabase from '../../../state/selected-database.selectors';
-import { GetDatabaseTables } from '../../state/view-database.actions';
+import { CreateTable, GetDatabaseTables } from '../../state/view-database.actions';
 import { ClearSelectedDatabase } from 'src/app/state/selected-database.actions';
 import { CreateIndexComponent } from '../../components/create-index/create-index.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-view-database-shell',
@@ -21,6 +21,8 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
   filteredTablesList: TableModel[] = [];
   selectedDatabase: string;
   getTablesListLoadInProgress: boolean;
+  dialogRefCreateTable: MatDialogRef<AddTableComponent>;
+  dialogRefCreateIndex: MatDialogRef<CreateIndexComponent>;
 
   private subscriptions: Subscription[] = [];
 
@@ -80,10 +82,9 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
   }
 
   openAddTableDialog() {
-    this.dialog.open(AddTableComponent, {
+    this.dialogRefCreateTable = this.dialog.open(AddTableComponent, {
       minWidth: "90%",
       maxHeight: '98vh',
-      disableClose: true,
       data: {
         tablesList: this.tablesList,
         createTableCallback: this.createTable 
@@ -92,14 +93,14 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
   }
 
   createTable = (table: TableModel) => {
-    console.log(table);
+    this.store.dispatch(new CreateTable({ databaseName: this.selectedDatabase, table }));
+    this.dialogRefCreateTable.close();
   }
 
   openCreateIndexDialog() {
-    this.dialog.open(CreateIndexComponent, {
+    this.dialogRefCreateIndex = this.dialog.open(CreateIndexComponent, {
       minWidth: "90%",
       maxHeight: '98vh',
-      disableClose: true,
       data: {
         
       }

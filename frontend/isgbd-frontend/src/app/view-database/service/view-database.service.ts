@@ -33,4 +33,15 @@ export class ViewDatabaseService {
                 })
             )
     }
+
+    createTable(databaseName:string, table: TableModel): Observable<TableModel[]> {
+        const url = `${this.baseUrl}/database/${databaseName}/table`;
+
+        return this.http.post<TableModel[]>(url, table)
+            .pipe(
+                map((tableList: TableModel[]) => {
+                    return tableList;
+                })
+            )
+    }
 }
