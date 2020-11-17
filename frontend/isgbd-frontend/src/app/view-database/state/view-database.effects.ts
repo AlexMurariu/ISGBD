@@ -92,4 +92,26 @@ export class ViewDatabaseEffects {
             )
         )
     )
+
+    @Effect()
+    createIndex$: Observable<Action> = this.actions$.pipe(
+        ofType(viewDatabaseActions.ViewDatabaseActionTypes.CreateIndex),
+        mergeMap((action: viewDatabaseActions.CreateIndex) => 
+            this.viewDatabaseService.createIndex(action.payload.databaseName, action.payload.tableName, action.payload.index).pipe(
+                switchMap((tableList: TableModel[]) => {
+                        return [
+                            new viewDatabaseActions.CreateIndexSuccess(tableList)
+                        ]
+                    }
+                ),
+                catchError(err =>  {
+                    return of(
+                        new viewDatabaseActions.CreateIndexFail("Can't create index!"),
+                        new AddToNotification(NotificationModel.createErrorNotification('', "Can't create index!"))
+                        )
+                    }
+                )
+            )
+        )
+    )
 }

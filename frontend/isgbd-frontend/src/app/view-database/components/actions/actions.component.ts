@@ -1,6 +1,7 @@
 import { debounceTime } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { TableModel } from 'src/app/shared/models';
 
 @Component({
   selector: 'app-actions',
@@ -10,6 +11,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 export class ActionsComponent implements OnInit {
   tablesForm: FormGroup;
 
+  @Input() tablesList: TableModel[];
   @Output() findDatabaseAction: EventEmitter<any> = new EventEmitter<any>();
   @Output() filterTablesList: EventEmitter<string> = new EventEmitter<string>();
   @Output() createTableAction: EventEmitter<any> = new EventEmitter<any>();

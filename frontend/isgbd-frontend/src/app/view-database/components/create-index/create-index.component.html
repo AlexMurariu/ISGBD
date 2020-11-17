@@ -1,6 +1,34 @@
 <div class="container">
+    <div class="header">
+        <div class="title">Create index</div>
+    </div>
+    <div class="create-index-form" [formGroup]="createIndexForm">
+        <mat-form-field class="create-index-form-field">
+            <input matInput formControlName="name" placeholder="Index name" autocomplete="off">
+            <mat-error *ngIf="createIndexForm.controls.name.errors?.required">Name is required!</mat-error>
+            <mat-error *ngIf="createIndexForm.controls.name.errors?.pattern">Invalid name!</mat-error>
+        </mat-form-field>
+        <mat-form-field class="create-index-form-field">
+            <mat-label>Table</mat-label>
+            <mat-select formControlName="tableName">
+                <mat-option *ngFor="let table of data.tablesList" [value]="table.tableName">
+                    {{ table.tableName }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="createIndexForm.controls.tableName.errors?.required">Table is required</mat-error>
+        </mat-form-field>
+        <mat-form-field class="create-index-form-field">
+            <mat-label>Column</mat-label>
+            <mat-select formControlName="attributeName" [disabled]="!listOfAttributes.length">
+                <mat-option *ngFor="let attribute of listOfAttributes" [value]="attribute.attributeName">
+                    {{ attribute.attributeName }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="createIndexForm.controls.attributeName.errors?.required">Column is required</mat-error>
+        </mat-form-field>
+    </div>
     <div class="buttons-container">
         <button mat-raised-button (click)="cancel()">Cancel</button>
-        <button class="create-button" mat-raised-button color="primary" >Create</button>
+        <button class="create-button" mat-raised-button color="primary" [disabled]="!createIndexForm.valid" (click)="createIndex()">Create</button>
     </div>
 </div>

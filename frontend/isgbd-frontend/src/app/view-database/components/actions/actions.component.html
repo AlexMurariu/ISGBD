@@ -8,7 +8,7 @@
         <button class="action-button" mat-raised-button color="primary" (click)="createTable()">
             Create table
         </button>
-        <button class="action-button" mat-raised-button color="primary" (click)="createIndex()">
+        <button class="action-button" mat-raised-button color="primary" [disabled]="tablesList && !tablesList.length" (click)="createIndex()">
             Create index
         </button>
         <button class="action-button" mat-raised-button color="primary" (click)="findDatabase()">

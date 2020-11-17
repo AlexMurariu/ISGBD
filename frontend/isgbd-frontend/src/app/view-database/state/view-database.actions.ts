@@ -79,7 +79,7 @@ export class CreateIndex implements Action {
 export class CreateIndexSuccess implements Action {
     readonly type = ViewDatabaseActionTypes.CreateIndexSuccess;
 
-    constructor(public payload: TableModel) {}
+    constructor(public payload: TableModel[]) {}
 }
 
 export class CreateIndexFail implements Action {

@@ -172,12 +172,13 @@ app.post("/database/:databaseName/table/:tableName/index", (req, res) => {
                 res.send('Index already in database');
             } else {
                 const attrList = tableList[tableIndex].attributes;
-                const attribute = insertedIndex.indexAttributes.IAttribute;
+                const attribute = insertedIndex.indexAttribute;
                 const attributeIndex = utils.findItemInList(attrList, 'attributeName', attribute);
 
                 if (attributeIndex !== -1) {
                     indexList.push(insertedIndex);
-                    fs.writeFileSync(FILE_NAME, JSON.stringify(database));
+                    fs.writeFileSync(FILE_NAME, JSON.stringify(databaseFromFile));
+                    res.send(databaseFromFile.databases[databaseIndex].tables);
                 } else {
                     res.status(404);
                     res.send('Attribute not found!');

@@ -1,6 +1,7 @@
 <div class="view-tables-container">
     <div class="actions-container">
         <app-actions
+            [tablesList]="tablesList"
             (filterTablesList)="filterTablesList($event)"
             (findDatabaseAction)="findDatabase()"
             (createTableAction)="openAddTableDialog()"

@@ -1,6 +1,30 @@
 .container {
     width: 100%;
     
+    .header {
+        width: 100%;
+
+        .title {
+            font-size: 25px;
+            font-weight: 500;
+        }
+    }
+
+    .create-index-form {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+
+        .create-index-form-field {
+            margin-left: 50px;
+
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+    }
+    
     .buttons-container {
         width: 100%;
         display: flex;

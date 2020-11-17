@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from "@angular/core";
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TableModel } from 'src/app/shared/models';
+import { IndexModel, TableModel } from 'src/app/shared/models';
 
 @Injectable({
     providedIn: 'root'
@@ -38,6 +38,17 @@ export class ViewDatabaseService {
         const url = `${this.baseUrl}/database/${databaseName}/table`;
 
         return this.http.post<TableModel[]>(url, table)
+            .pipe(
+                map((tableList: TableModel[]) => {
+                    return tableList;
+                })
+            )
+    }
+
+    createIndex(databaseName: string, tableName: string, index: IndexModel): Observable<TableModel[]> {
+        const url = `${this.baseUrl}/database/${databaseName}/table/${tableName}/index`;
+
+        return this.http.post<TableModel[]>(url, index)
             .pipe(
                 map((tableList: TableModel[]) => {
                     return tableList;

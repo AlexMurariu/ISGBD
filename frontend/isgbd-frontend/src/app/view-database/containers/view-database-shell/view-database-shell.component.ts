@@ -2,14 +2,14 @@ import { AddTableComponent } from './../../components/add-table/add-table.compon
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { TableModel } from 'src/app/shared/models';
+import { IndexModel, TableModel } from 'src/app/shared/models';
 import { State } from 'src/app/state';
 import * as fromViewDatabase from '../../state';
 import * as fromSelectedDatabase from '../../../state/selected-database.selectors';
-import { CreateTable, GetDatabaseTables } from '../../state/view-database.actions';
+import { CreateIndex, CreateTable, GetDatabaseTables } from '../../state/view-database.actions';
 import { ClearSelectedDatabase } from 'src/app/state/selected-database.actions';
 import { CreateIndexComponent } from '../../components/create-index/create-index.component';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-view-database-shell',
@@ -21,8 +21,6 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
   filteredTablesList: TableModel[] = [];
   selectedDatabase: string;
   getTablesListLoadInProgress: boolean;
-  dialogRefCreateTable: MatDialogRef<AddTableComponent>;
-  dialogRefCreateIndex: MatDialogRef<CreateIndexComponent>;
 
   private subscriptions: Subscription[] = [];
 
@@ -82,7 +80,7 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
   }
 
   openAddTableDialog() {
-    this.dialogRefCreateTable = this.dialog.open(AddTableComponent, {
+    this.dialog.open(AddTableComponent, {
       minWidth: "90%",
       maxHeight: '98vh',
       data: {
@@ -94,16 +92,20 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
 
   createTable = (table: TableModel) => {
     this.store.dispatch(new CreateTable({ databaseName: this.selectedDatabase, table }));
-    this.dialogRefCreateTable.close();
   }
 
   openCreateIndexDialog() {
-    this.dialogRefCreateIndex = this.dialog.open(CreateIndexComponent, {
+    this.dialog.open(CreateIndexComponent, {
       minWidth: "90%",
       maxHeight: '98vh',
       data: {
-        
+        tablesList: this.tablesList,
+        createIndexCallback: this.createIndex
       }
     })
+  }
+
+  createIndex = (index: IndexModel, tableName: string) => {
+    this.store.dispatch(new CreateIndex({databaseName: this.selectedDatabase, tableName, index}));
   }
 }

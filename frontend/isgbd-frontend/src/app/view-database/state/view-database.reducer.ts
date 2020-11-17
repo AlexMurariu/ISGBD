@@ -42,6 +42,7 @@ export function reducer(state = initialState, action: ViewDatabaseActions): View
             }
         }
 
+        case ViewDatabaseActionTypes.CreateIndexSuccess:
         case ViewDatabaseActionTypes.CreateTableSuccess: 
             return {
                 ...state,

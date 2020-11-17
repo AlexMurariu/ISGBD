@@ -91,7 +91,7 @@ export class AddTableComponent implements OnInit {
   }
 
   cancel() {
-    this.dialogRef.close(true);
+    this.dialogRef.close();
   }
 
   removeColumn(columnName: string) {
@@ -136,6 +136,7 @@ export class AddTableComponent implements OnInit {
     });
 
     this.data.createTableCallback(table);
+    this.dialogRef.close();
   }
 
   columnNameValidator(): ValidatorFn {
