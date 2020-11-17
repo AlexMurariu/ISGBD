@@ -38,7 +38,7 @@ export class TableComponent {
       maxHeight: '98vh',
       disableClose: true,
       data: {
-        
+        table: this.table
       }
     });
   }

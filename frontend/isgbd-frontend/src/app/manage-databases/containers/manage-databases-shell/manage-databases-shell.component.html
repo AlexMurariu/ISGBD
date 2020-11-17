@@ -4,7 +4,7 @@
     [databaseIsLoading]="databaseIsLoading"
     [getDatabaseListError]="getDatabaseListError"
     (selectDatabaseAction)="selectDatabase($event)"
-    (deleteDatabaseAction)="deleteDatabase($event)"
+    (deleteDatabaseAction)="openDeleteDatabasePopup($event)"
     (addDatabaseAction)="addDatabase($event)"
   ></app-manage-databases>
 </div>

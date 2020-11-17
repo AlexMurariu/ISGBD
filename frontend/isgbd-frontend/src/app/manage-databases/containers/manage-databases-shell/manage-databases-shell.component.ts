@@ -1,3 +1,4 @@
+import { UIService } from './../../../core/services/ui.service';
 import { AddDatabase, DeleteDatabase, GetDatabases } from './../../state/manage-databases.actions';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
@@ -17,7 +18,7 @@ export class ManageDatabasesShellComponent implements OnInit, OnDestroy {
   getDatabaseListError: string;
   private readonly subscriptions: Subscription[] = [];
 
-  constructor(private readonly store: Store<State>) { }
+  constructor(private readonly store: Store<State>, private readonly uiService: UIService) { }
 
   ngOnInit() {
     this.store.dispatch(new GetDatabases());
@@ -44,6 +45,16 @@ export class ManageDatabasesShellComponent implements OnInit, OnDestroy {
 
   selectDatabase(databaseName: string) {
     this.store.dispatch(new SelectDatabase(databaseName));
+  }
+
+  openDeleteDatabasePopup(databaseName: string) {
+    this.uiService.showConfirmationPopup({
+      title: 'Drop database',
+      message: 'Are you sure you want to droo this database?',
+      confirmButtonText: 'Ok',
+      cancelButtonText: 'Cancel',
+      confirmCallback: () => this.deleteDatabase(databaseName)
+    })
   }
 
   deleteDatabase(databaseName: string) {

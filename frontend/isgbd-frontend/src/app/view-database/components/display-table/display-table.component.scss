@@ -1,9 +1,30 @@
 .container {
     width: 100%;
-    
+
     .buttons-container {
         width: 100%;
         display: flex;
-        justify-content: flex-end;
+        align-items: center;
+        justify-content: space-between;
+        
+        .table-name {
+            font-weight: 500;
+            font-size: 25px;
+        }
     }
+
+    .content {
+        margin-top: 15px;
+        display: flex;
+
+        .table-details {
+            width: 50%;
+            
+            .title {
+                font-weight: 500;
+                font-size: 20px;
+            }
+        }
+    }
+
 }
