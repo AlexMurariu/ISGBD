@@ -7,7 +7,7 @@ export interface ITableModel {
     fileName: string;
     rowLength: number;
     attributes: AttributeModel[];
-    primaryKey: string;
+    primaryKey: string[];
     foreignKeys: ForeignKeyModel[];
     indexFiles: IndexModel[];
 }
@@ -17,7 +17,7 @@ export class TableModel implements TableModel {
     fileName: string;
     rowLength: number;
     attributes: AttributeModel[];
-    primaryKey: string;
+    primaryKey: string[];
     foreignKeys: ForeignKeyModel[];
     indexFiles: IndexModel[];
 
@@ -26,7 +26,7 @@ export class TableModel implements TableModel {
         this.fileName = params.fileName;
         this.rowLength = params.rowLength;
         this.attributes = params.attributes || [];
-        this.primaryKey = params.primaryKey;
+        this.primaryKey = params.primaryKey || [];
         this.foreignKeys = params.foreignKeys || [];
         this.indexFiles = params.indexFiles || [];
     }

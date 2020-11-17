@@ -1,6 +1,64 @@
 .container {
     width: 100%;
     
+    .header {
+        width: 100%;
+
+        .title {
+            font-size: 25px;
+            font-weight: 500;
+        }
+    }
+
+    .create-table-form {
+        margin: 5px 0;
+
+        .column-fields-container {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            .column-field {
+                margin-left: 50px;
+
+                &:first-child {
+                    margin-left: 0;
+                }
+
+                &:last-child {
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
+
+    .columns-container {
+        width: 100%;
+
+       .columns-header {
+           font-size: 16px;
+            font-weight: 500;
+
+        } 
+
+        .columns-list {
+            width: 100%;
+
+            .column {
+                display: flex;
+                align-items: center;
+
+                .column-element {
+                    margin-left: 20px;
+
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                }
+            }
+       }
+    }
+
     .buttons-container {
         width: 100%;
         display: flex;

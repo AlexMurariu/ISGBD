@@ -12,28 +12,31 @@
                             "attributeName": "id_supercar",
                             "type": "varchar",
                             "length": "255",
-                            "isnull": "0"
+                            "isNull": "0",
+                            "isUnique": "0"
                         },
                         {
                             "attributeName": "name",
                             "type": "varchar",
                             "length": "255",
-                            "isnull": "0"
+                            "isNull": "0"
                         },
                         {
                             "attributeName": "color",
                             "type": "varchar",
                             "length": "255",
-                            "isnull": "0"
+                            "isNull": "0",
+                            "isUnique": "0"
                         },
                         {
                             "attributeName": "price",
                             "type": "double",
                             "length": "25",
-                            "isnull": "0"
+                            "isNull": "0",
+                            "isUnique": "0"
                         }
                     ],
-                    "primaryKey": "id_supercar",
+                    "primaryKey": [ "id_supercar" ],
                     "foreignKeys": [
                         {
                             "referencedTableName": "company",
@@ -74,22 +77,25 @@
                             "attributeName": "id_company",
                             "type": "varchar",
                             "length": "255",
-                            "isnull": "0"
+                            "isNull": "0",
+                            "isUnique": "0"
                         },
                         {
                             "attributeName": "name",
                             "type": "varchar",
                             "length": "255",
-                            "isnull": "0"
+                            "isNull": "0",
+                            "isUnique": "0"
                         },
                         {
                             "attributeName": "country",
                             "type": "varchar",
                             "length": "255",
-                            "isnull": "0"
+                            "isNull": "0",
+                            "isUnique": "0"
                         }
                     ],
-                    "primaryKey": "id_company",
+                    "primaryKey": [ "id_company" ],
                     "foreignKeys": [],
                     "indexFiles": []
                 },
@@ -102,34 +108,39 @@
                             "attributeName": "id_customer",
                             "type": "varchar",
                             "length": "255",
-                            "isnull": "0"
+                            "isNull": "0",
+                            "isUnique": "0"
                         },
                         {
                             "attributeName": "first_name",
                             "type": "varchar",
                             "length": "255",
-                            "isnull": "0"
+                            "isNull": "0",
+                            "isUnique": "0"
                         },
                         {
                             "attributeName": "last_name",
                             "type": "varchar",
                             "length": "255",
-                            "isnull": "0"
+                            "isNull": "0",
+                            "isUnique": "0"
                         },
                         {
                             "attributeName": "age",
                             "type": "integer",
                             "length": "25",
-                            "isnull": "0"
+                            "isNull": "0",
+                            "isUnique": "0"
                         },
                         {
                             "attributeName": "gender",
                             "type": "string",
                             "length": "10",
-                            "isnull": "0"
+                            "isNull": "0",
+                            "isUnique": "0"
                         }
                     ],
-                    "primaryKey": "id_supercar",
+                    "primaryKey": [ "id_supercar" ],
                     "foreignKeys": [],
                     "indexFiles": []
                 }

@@ -1,6 +1,58 @@
 <div class="container">
+    <div class="header">
+        <div class="title">Create table</div>
+    </div>
+    <div class="create-table-form" [formGroup]="createTableForm">
+        <mat-form-field>
+            <input matInput formControlName="tableName" placeholder="Table name" autocomplete="off">
+            <mat-error *ngIf="createTableForm.controls.tableName.errors?.required">Table name is required!</mat-error>
+            <mat-error *ngIf="createTableForm.controls.tableName.errors?.pattern">Table name is invalid!</mat-error>
+        </mat-form-field>
+        <div class="column-fields-container" [formGroup]="columnControl">
+             <mat-form-field class="column-field">
+                 <input matInput formControlName="name" placeholder="Name" autocomplete="off">
+                 <mat-error *ngIf="columnControl.controls.name.errors?.required">Name is required!</mat-error>
+                 <mat-error *ngIf="columnControl.controls.name.errors?.nameExists">Column already exists!</mat-error>
+             </mat-form-field>
+             <mat-form-field class="column-field">
+                 <mat-label>Type</mat-label>
+                 <mat-select formControlName="type">
+                     <mat-option *ngFor="let type of types" [value]="type">
+                         {{ type }}
+                     </mat-option>
+                 </mat-select>
+                 <mat-error *ngIf="columnControl.controls.type.errors?.required">Type is required</mat-error>
+             </mat-form-field>
+             <mat-form-field class="column-field">
+                 <input matInput formControlName="length" placeholder="Length" autocomplete="off">
+                 <mat-error *ngIf="columnControl.controls.length.errors?.required">Length is required!</mat-error>
+                 <mat-error *ngIf="columnControl.controls.length.errors?.pattern">Invalid length value!</mat-error>
+             </mat-form-field>
+             <mat-checkbox class="column-field" formControlName="primaryKey" [labelPosition]="'before'" color="primary">Primary key</mat-checkbox>
+             <mat-checkbox class="column-field" formControlName="isNull" [labelPosition]="'before'" color="primary">Is null</mat-checkbox>
+             <mat-checkbox class="column-field" formControlName="isUnique" [labelPosition]="'before'" color="primary">Is unique</mat-checkbox>
+             <button class="column-field" mat-icon-button [disabled]="disableAddColumnButton" (click)="addColumn()">
+                 <mat-icon color="primary">add_box</mat-icon>
+             </button>
+        </div>
+    </div>
+    <div *ngIf="columns.length" class="columns-container">
+        <div class="columns-header">Columns</div>
+        <div class="columns-list">
+            <div class="column" *ngFor="let column of columns">
+                <mat-icon class="column-element" color="primary" *ngIf="column.primaryKey">vpn_key</mat-icon>
+                <div class="column-element">{{column.name}}</div>
+                <div class="column-element">{{column.type}}</div>
+                <div class="column-element"*ngIf="column.isUnique">Unique</div>
+                <div class="column-element" *ngIf="!column.isNull">No null values</div>
+                <button mat-icon-button class="column-element" (click)="removeColumn(column.name)">
+                    <mat-icon color="primary">close</mat-icon>
+                </button>
+            </div> 
+        </div>
+    </div>
     <div class="buttons-container">
         <button mat-raised-button (click)="cancel()">Cancel</button>
-        <button class="add-button" mat-raised-button color="primary" >Add</button>
+        <button class="add-button" mat-raised-button color="primary" [disabled]="disableCreateButton" (click)="createTable()">Create</button>
     </div>
 </div>
