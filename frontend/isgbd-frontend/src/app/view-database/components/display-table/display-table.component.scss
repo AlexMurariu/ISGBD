@@ -59,6 +59,21 @@
                     }
                 }
             }
+            .index-list {
+                margin-top: 10px;
+                
+                .index-line {
+                    display: flex;
+
+                    .index-element {
+                        margin-left: 10px;
+
+                        &:first-child {
+                            margin-left: 0;
+                        }
+                    }
+                }
+            }
         }
     }
 

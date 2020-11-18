@@ -17,7 +17,7 @@
                     <div class="column-element" *ngIf="!attribute.isNull">No null values</div>
                 </div> 
             </div>
-            <div class="title">Foreign keys</div>
+            <div class="title" *ngIf="data.table.foreignKeys.length">Foreign keys</div>
             <div class="foreign-key-list" *ngIf="data.table.foreignKeys.length">
                 <div class="foreign-key" *ngFor="let foreignKey of data.table.foreignKeys">
                     <div class="foreign-key-element">
@@ -26,8 +26,17 @@
                 </div> 
             </div>
         </div>
-        <div class="table-details" *ngIf="data.table.foreignKeys.length">
+        <div *ngIf="data.table.indexFiles.length" class="table-details">
             <div class="title">Indexes</div>
+            <div class="index-list">
+                <div class="index-line"*ngFor="let index of data.table.indexFiles">
+                    <div class="index-element">Index name: {{index.indexName}}</div>
+                    <div class="index-element">Index type: {{index.indexType || 'Unknown'}}</div>
+                    <div class="index-element">Key length: {{index.keyLength || 'Unknown'}}</div>
+                    <div class="index-element">Column: {{index.indexAttribute}}</div>
+                    <div class="index-element" *ngIf="index.isUnique">Unique</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

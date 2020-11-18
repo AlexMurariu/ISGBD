@@ -100,7 +100,8 @@ export class ViewDatabaseEffects {
             this.viewDatabaseService.createIndex(action.payload.databaseName, action.payload.tableName, action.payload.index).pipe(
                 switchMap((tableList: TableModel[]) => {
                         return [
-                            new viewDatabaseActions.CreateIndexSuccess(tableList)
+                            new viewDatabaseActions.CreateIndexSuccess(tableList),
+                            new AddToNotification(NotificationModel.createSuccessNotification('', "Index created!"))
                         ]
                     }
                 ),
