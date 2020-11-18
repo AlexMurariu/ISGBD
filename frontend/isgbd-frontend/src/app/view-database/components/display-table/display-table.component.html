@@ -1,6 +1,6 @@
 <div class="container">
     <div class="buttons-container">
-        <div class="table-name">{{data.table.tableName}}</div>
+        <div class="table-name">{{data.table.tableName | uppercase}}</div>
         <button mat-icon-button (click)="cancel()">
             <mat-icon>close</mat-icon>
         </button>
@@ -8,8 +8,25 @@
     <div class="content">
         <div class="table-details">
             <div class="title">Table details</div>
+            <div class="columns-list">
+                <div class="column" *ngFor="let attribute of data.table.attributes">
+                    <mat-icon class="column-element" color="primary" *ngIf="isPrimaryKey(attribute.attributeName)">vpn_key</mat-icon>
+                    <div class="column-element">{{attribute.attributeName}}</div>
+                    <div class="column-element">{{attribute.type}}</div>
+                    <div class="column-element"*ngIf="attribute.isUnique">Unique</div>
+                    <div class="column-element" *ngIf="!attribute.isNull">No null values</div>
+                </div> 
+            </div>
+            <div class="title">Foreign keys</div>
+            <div class="foreign-key-list" *ngIf="data.table.foreignKeys.length">
+                <div class="foreign-key" *ngFor="let foreignKey of data.table.foreignKeys">
+                    <div class="foreign-key-element">
+                        Column {{foreignKey.attributeName}} references column {{foreignKey.referencedAttributeName}} from {{foreignKey.referencedTableName}} table
+                    </div>
+                </div> 
+            </div>
         </div>
-        <div class="table-details">
+        <div class="table-details" *ngIf="data.table.foreignKeys.length">
             <div class="title">Indexes</div>
         </div>
     </div>

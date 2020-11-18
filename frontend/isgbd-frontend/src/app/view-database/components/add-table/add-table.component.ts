@@ -19,7 +19,7 @@ export class AddTableComponent implements OnInit {
   createTableForm: FormGroup;
   columns = [];
   foreignKeys = [];
-  types = ['integer', 'varchar', 'char'];
+  types = ['integer', 'double', 'varchar', 'char'];
 
   constructor(
     private readonly fb: FormBuilder,

@@ -20,7 +20,9 @@ export class DisplayTableComponent {
   }
 
   isPrimaryKey(attributeName: string) {
+    const isPrimaryKey = this.data.table.primaryKey.findIndex((primaryKey: string) => primaryKey === attributeName);
 
+    return isPrimaryKey !== -1;
   }
 
   isForeignKey(attributeName: string) {

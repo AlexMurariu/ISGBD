@@ -14,7 +14,6 @@
     }
 
     .content {
-        margin-top: 15px;
         display: flex;
 
         .table-details {
@@ -23,6 +22,42 @@
             .title {
                 font-weight: 500;
                 font-size: 20px;
+                margin-top: 15px;
+            }
+
+            .columns-list {
+                margin-top: 10px;
+                width: 100%;
+    
+                .column {
+                    display: flex;
+                    align-items: center;
+    
+                    .column-element {
+                        margin-left: 20px;
+    
+                        &:first-child {
+                            margin-left: 0;
+                        }
+                    }
+                }
+           }
+
+           .foreign-key-list {
+                width: 100%;
+                margin-top: 10px;
+                
+                .foreign-key {
+                    
+                    .foreign-key-element {
+                        display: flex;
+                        align-items: center;
+
+                        .remove-foreign-key-button {
+                            margin-left: 10px;
+                        }
+                    }
+                }
             }
         }
     }
