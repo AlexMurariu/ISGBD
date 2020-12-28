@@ -3,12 +3,12 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const utils = require("./utils");
 const cors = require('cors');
-const { table } = require("console");
+const { getDatabasesFromDB } = require("./dbFunctions");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-  
+
 app.use(cors());
 
 app.use((req, res, next) => {
@@ -189,4 +189,8 @@ app.post("/database/:databaseName/table/:tableName/index", (req, res) => {
             res.send('Table not found!');  
         }
     }
+})
+
+app.get("/show", (req, res) => {
+    getDatabasesFromDB();
 })
