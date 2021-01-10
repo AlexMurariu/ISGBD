@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const utils = require("./utils");
 const cors = require('cors');
-const { getDatabasesFromDB } = require("./dbFunctions");
+const { getDatabasesFromDB, insertDataInDB } = require("./dbFunctions");
 
 const app = express();
 app.use(bodyParser.json());
@@ -191,6 +191,66 @@ app.post("/database/:databaseName/table/:tableName/index", (req, res) => {
     }
 })
 
-app.get("/show", (req, res) => {
-    getDatabasesFromDB();
-})
+app.get("/database/:databaseName/table/:tableName/data", async (req, res) => {
+    const databaseFromFile = readFromFile(FILE_NAME);
+    const databaseName = req.params.databaseName;
+    const tableName = req.params.tableName;
+    const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
+
+    if (databaseIndex === -1) {
+        res.status(404);
+        res.send('Database not found!');
+    } else {
+        const tableList = databaseFromFile.databases[databaseIndex].tables;
+        const tableIndex = utils.findItemInList(tableList, 'tableName', tableName);
+
+        if (tableIndex !== -1) {
+            const dataFromDb = await getDatabasesFromDB(databaseName, tableName);
+            if (dataFromDb) {
+                res.send(dataFromDb);
+            } else {
+                res.status(500);
+                res.send("Something went wrong!");
+            }
+        }
+    }
+});
+
+app.post("/database/:databaseName/table/:tableName/insert", async (req, res) => {
+    const databaseFromFile = readFromFile(FILE_NAME);
+    const databaseName = req.params.databaseName;
+    const tableName = req.params.tableName;
+    const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
+    const data = req.body;
+
+    if (databaseIndex === -1) {
+        res.status(404);
+        res.send('Database not found!');
+    } else {
+        const tableList = databaseFromFile.databases[databaseIndex].tables;
+        const tableIndex = utils.findItemInList(tableList, 'tableName', tableName);
+
+        if (tableIndex !== -1) {
+            const dataFromDb = await getDatabasesFromDB(databaseName, tableName);
+            const hasDuplicateUniqueValue = !utils.canInsertRecordWithUniqueValue(tableList[tableIndex].attributes, data.value, dataFromDb);
+            const hasDuplicatePrimaryKey = !utils.canInsertRecordWithPrimaryKey(data.key, dataFromDb);
+
+            if (hasDuplicatePrimaryKey) {
+                res.status(400);
+                res.send("Primary key value should not repeat itself");
+            } else if (hasDuplicateUniqueValue) {
+                res.status(400);
+                res.send("One of the attributes is unique, and it's value must be different");
+            } else {
+                const insertionSuccessful = insertDataInDB(databaseName, tableName, data);
+            
+                if (insertionSuccessful) {
+                    res.send([]);
+                } else {
+                    res.status(500);
+                    res.send('Something went wrong while inserting the record!');
+                }   
+            }
+        }
+    }
+});

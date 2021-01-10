@@ -115,4 +115,48 @@ export class ViewDatabaseEffects {
             )
         )
     )
+
+    @Effect()
+    getTableRecords$: Observable<Action> = this.actions$.pipe(
+        ofType(viewDatabaseActions.ViewDatabaseActionTypes.GetTableRecords),
+        mergeMap((action: viewDatabaseActions.GetTableRecords) => 
+            this.viewDatabaseService.getTableRecords(action.payload.databaseName, action.payload.tableName).pipe(
+                switchMap((recordsList: {key: string, value: string}[]) => {
+                        return [
+                            new viewDatabaseActions.GetTableRecordsSuccess(recordsList)
+                        ]
+                    }
+                ),
+                catchError(err =>  {
+                    return of(
+                        new viewDatabaseActions.GetTableRecordsFail("Something went worng, can't load table records!"),
+                        new AddToNotification(NotificationModel.createErrorNotification('', "Something went worng, can't load table records!"))
+                        )
+                    }
+                )
+            )
+        )
+    )
+
+    @Effect()
+    insertTableRecord$: Observable<Action> = this.actions$.pipe(
+        ofType(viewDatabaseActions.ViewDatabaseActionTypes.InsertTableRecord),
+        mergeMap((action: viewDatabaseActions.InsertTableRecord) => 
+            this.viewDatabaseService.insertTableRecord(action.payload.databaseName, action.payload.tableName, action.payload.value).pipe(
+                switchMap(data => {
+                        return [
+                            new AddToNotification(NotificationModel.createSuccessNotification('', 'Record inserted successfully!'))
+                        ]
+                    }
+                ),
+                catchError(err =>  {
+                    return of(
+                        new viewDatabaseActions.InsertTableRecordFail(err.error.text),
+                        new AddToNotification(NotificationModel.createErrorNotification('', err.error.text))
+                        )
+                    }
+                )
+            )
+        )
+    )
 }

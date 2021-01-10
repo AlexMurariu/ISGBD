@@ -13,7 +13,13 @@ export const enum ViewDatabaseActionTypes {
     DropTableFail = '[View Database] Drop Table Fail',
     CreateIndex = '[View Database] Create Index',
     CreateIndexSuccess = '[View Database] Create Index Success',
-    CreateIndexFail = '[View Database] Create Index Fail'
+    CreateIndexFail = '[View Database] Create Index Fail',
+    GetTableRecords = '[View Database] Get Table Records',
+    GetTableRecordsSuccess = '[View Database] Get Table Records Success',
+    GetTableRecordsFail = '[View Database] Get Table Records Fail',
+    InsertTableRecord = '[View Database] Insert Table Record',
+    InsertTableRecordSuccess = '[View Database] Insert Table Record Success',
+    InsertTableRecordFail = '[View Database] Insert Table Record Fail'
 }
 
 export class GetDatabaseTables implements Action {
@@ -88,6 +94,42 @@ export class CreateIndexFail implements Action {
     constructor(public payload: string) {}
 }
 
+export class GetTableRecords implements Action {
+    readonly type = ViewDatabaseActionTypes.GetTableRecords;
+
+    constructor(public payload: {databaseName: string, tableName: string}) {}
+}
+
+export class GetTableRecordsSuccess implements Action {
+    readonly type = ViewDatabaseActionTypes.GetTableRecordsSuccess;
+
+    constructor(public payload: {key: string, value: string}[]) {}
+}
+
+export class GetTableRecordsFail implements Action {
+    readonly type = ViewDatabaseActionTypes.GetTableRecordsFail;
+
+    constructor(public payload: string) {}
+}
+
+export class InsertTableRecord implements Action {
+    readonly type = ViewDatabaseActionTypes.InsertTableRecord;
+
+    constructor(public payload: {databaseName: string, tableName: string, value: {key: string, value: string}}) {}
+}
+
+export class InsertTableRecordSuccess implements Action {
+    readonly type = ViewDatabaseActionTypes.InsertTableRecordSuccess;
+}
+
+export class InsertTableRecordFail implements Action {
+    readonly type = ViewDatabaseActionTypes.InsertTableRecordFail;
+
+    constructor(public payload: string) {}
+}
+
+
+
 export type ViewDatabaseActions = GetDatabaseTables
     | GetDatabaseTablesSuccess
     | GetDatabaseTablesFail
@@ -99,4 +141,10 @@ export type ViewDatabaseActions = GetDatabaseTables
     | DropTableFail
     | CreateIndex
     | CreateIndexSuccess
-    | CreateIndexFail;
+    | CreateIndexFail
+    | GetTableRecords
+    | GetTableRecordsSuccess
+    | GetTableRecordsFail
+    | InsertTableRecord
+    | InsertTableRecordSuccess
+    | InsertTableRecordFail;

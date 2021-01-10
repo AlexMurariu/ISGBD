@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="header">
+        <div class="title">Create index</div>
+    </div>
+    <div class="insert-record-form" [formGroup]="insertRecordForm">
+        <mat-form-field class="select-table-form-field">
+            <mat-label>Table</mat-label>
+            <mat-select formControlName="tableName">
+                <mat-option *ngFor="let table of data.tablesList" [value]="table.tableName">
+                    {{ table.tableName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div class="record-container" *ngIf="tableNameControl.value">
+            <mat-form-field class="record-fields" *ngFor="let attribute of selectedTable()?.attributes">
+                <input matInput formControlName="{{attribute.attributeName}}" placeholder="{{attribute.attributeName}}" autocomplete="off">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="buttons-container">
+        <button mat-raised-button (click)="cancel()">Cancel</button>
+        <button class="create-button" mat-raised-button color="primary" (click)="insert()">Insert</button>
+    </div>
+</div>

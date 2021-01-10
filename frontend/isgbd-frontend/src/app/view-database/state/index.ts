@@ -31,3 +31,8 @@ export const getTablesListLoadingStatus = createSelector(
     getViewDatabaseFeatureState,
     state => state.viewDatabase.tablesListIsLoading
 );
+
+export const getTableRecords = createSelector(
+    getViewDatabaseFeatureState,
+    state => state.viewDatabase.tableRecords
+)

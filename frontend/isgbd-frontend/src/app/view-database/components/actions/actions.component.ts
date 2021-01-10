@@ -16,6 +16,7 @@ export class ActionsComponent implements OnInit {
   @Output() filterTablesList: EventEmitter<string> = new EventEmitter<string>();
   @Output() createTableAction: EventEmitter<any> = new EventEmitter<any>();
   @Output() createIndexAction: EventEmitter<any> = new EventEmitter<any>();
+  @Output() insertInTableAction: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private readonly fb: FormBuilder) { }
 
@@ -44,5 +45,9 @@ export class ActionsComponent implements OnInit {
 
   createIndex() {
     this.createIndexAction.emit();
+  }
+
+  insertRecordsInTable() {
+    this.insertInTableAction.emit();
   }
 }

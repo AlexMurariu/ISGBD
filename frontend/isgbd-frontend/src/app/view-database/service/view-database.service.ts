@@ -55,4 +55,26 @@ export class ViewDatabaseService {
                 })
             )
     }
+
+    getTableRecords(databaseName: string, tableName: string): Observable<{key: string, value: string}[]> {
+        const url = `${this.baseUrl}/database/${databaseName}/table/${tableName}/data`;
+
+        return this.http.get<{key: string, value: string}[]>(url)
+            .pipe(
+                map((recordsList: {key: string, value: string}[]) => {
+                    return recordsList;
+                })
+            )
+    }
+
+    insertTableRecord(databaseName: string, tableName: string, value: {key: string, value: string}): Observable<{key: string, value: string}[]> {
+        const url = `${this.baseUrl}/database/${databaseName}/table/${tableName}/insert`;
+
+        return this.http.post<any>(url, value)
+        .pipe(
+            map((response: any) => {
+                return [];
+            })
+        )
+    }
 }

@@ -4,6 +4,7 @@ import { ViewDatabaseState } from "./view-database.state";
 
 const initialState: ViewDatabaseState = {
     tablesList: null,
+    tableRecords: null,
     tablesListIsLoading: false,
     error: ''
 };
@@ -18,6 +19,7 @@ export function reducer(state = initialState, action: ViewDatabaseActions): View
 
         case ViewDatabaseActionTypes.GetDatabaseTablesSuccess:
             return {
+                ...state,
                 tablesList: action.payload,
                 tablesListIsLoading: false,
                 error: ''
@@ -25,6 +27,7 @@ export function reducer(state = initialState, action: ViewDatabaseActions): View
 
         case ViewDatabaseActionTypes.GetDatabaseTablesFail:
             return {
+                ...state,
                 tablesList: [],
                 tablesListIsLoading: false,
                 error: action.payload
@@ -47,6 +50,12 @@ export function reducer(state = initialState, action: ViewDatabaseActions): View
             return {
                 ...state,
                 tablesList: action.payload
+            }
+
+        case ViewDatabaseActionTypes.GetTableRecordsSuccess:
+            return {
+                ...state,
+                tableRecords: action.payload
             }
 
         default:

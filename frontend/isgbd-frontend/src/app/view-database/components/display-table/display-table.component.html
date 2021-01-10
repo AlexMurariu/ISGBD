@@ -39,5 +39,14 @@
             </div>
         </div>
     </div>
+    <div>
+        <div class="title"> Records</div>
+        <app-records-table
+            [attributes]="data.table?.attributes"
+            [primaryKey]="data.table?.primaryKey"
+            [recordsList]="data.recordsList"
+        ></app-records-table>
+    </div>
+
 </div>
 

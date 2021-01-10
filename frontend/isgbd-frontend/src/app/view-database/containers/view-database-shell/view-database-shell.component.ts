@@ -1,3 +1,4 @@
+import { InsertInTableComponent } from './../../components/insert-in-table/insert-in-table.component';
 import { AddTableComponent } from './../../components/add-table/add-table.component';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
@@ -6,10 +7,11 @@ import { IndexModel, TableModel } from 'src/app/shared/models';
 import { State } from 'src/app/state';
 import * as fromViewDatabase from '../../state';
 import * as fromSelectedDatabase from '../../../state/selected-database.selectors';
-import { CreateIndex, CreateTable, GetDatabaseTables } from '../../state/view-database.actions';
+import { CreateIndex, CreateTable, GetDatabaseTables, InsertTableRecord } from '../../state/view-database.actions';
 import { ClearSelectedDatabase } from 'src/app/state/selected-database.actions';
 import { CreateIndexComponent } from '../../components/create-index/create-index.component';
 import { MatDialog } from '@angular/material/dialog';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-view-database-shell',
@@ -21,6 +23,7 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
   filteredTablesList: TableModel[] = [];
   selectedDatabase: string;
   getTablesListLoadInProgress: boolean;
+  recordsList: {key: string, value: string}[];
 
   private subscriptions: Subscription[] = [];
 
@@ -41,7 +44,10 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
       }),
       this.store.pipe(select(fromViewDatabase.getTablesListLoadingStatus)).subscribe((getTablesListLoadInProgress: boolean) => {
         this.getTablesListLoadInProgress = getTablesListLoadInProgress;
-      })
+      }),
+      this.store.pipe(select(fromViewDatabase.getTableRecords)).subscribe((recordsList: {key: string, value: string}[]) => {
+        this.recordsList = recordsList;
+      }),
     ); 
   }
 
@@ -107,5 +113,24 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
 
   createIndex = (index: IndexModel, tableName: string) => {
     this.store.dispatch(new CreateIndex({databaseName: this.selectedDatabase, tableName, index}));
+  }
+
+  openInsertInTableDialog() {
+    this.dialog.open(InsertInTableComponent, {
+      minWidth: "90%",
+      maxHeight: '98vh',
+      data: {
+        tablesList: this.tablesList,
+        insertRecordCallback: this.insertRecord
+      }
+    })
+  }
+
+  insertRecord = (tableName: string, value: {key: string, value: string}) => {
+    this.store.dispatch(new InsertTableRecord({
+      databaseName: this.selectedDatabase,
+      tableName,
+      value
+    }));
   }
 }

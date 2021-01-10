@@ -19,7 +19,8 @@
                             "attributeName": "name",
                             "type": "varchar",
                             "length": "255",
-                            "isNull": "0"
+                            "isNull": "0",
+                            "isUnique": "0"
                         },
                         {
                             "attributeName": "color",

@@ -6,6 +6,7 @@
             (findDatabaseAction)="findDatabase()"
             (createTableAction)="openAddTableDialog()"
             (createIndexAction)="openCreateIndexDialog()"
+            (insertInTableAction)="openInsertInTableDialog()"
         >
         </app-actions>
     </div>
@@ -14,6 +15,7 @@
             *ngIf="tablesList && tablesList.length"
             [tablesList]="filteredTablesList"
             [databaseName]="selectedDatabase"
+            [recordsList]="recordsList"
         >
         </app-view-tables>
         <div class="no-tables-message"*ngIf="!tablesList || !tablesList.length">

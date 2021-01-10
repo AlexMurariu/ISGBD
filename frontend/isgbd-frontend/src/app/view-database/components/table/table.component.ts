@@ -1,5 +1,5 @@
 import { UIService } from './../../../core/services/ui.service';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, SimpleChanges } from '@angular/core';
 import { TableModel } from 'src/app/shared/models';
 import { MatDialog } from '@angular/material/dialog';
 import { DisplayTableComponent } from '../display-table/display-table.component';
@@ -10,13 +10,27 @@ import { DisplayTableComponent } from '../display-table/display-table.component'
   styleUrls: ['./table.component.scss']
 })
 export class TableComponent {
+  records: {key: string, value: string}[];
+
   @Input() table: TableModel;
+  @Input() databaseName: string;
+  @Input() recordsList: {key: string, value: string}[];
   @Output() dropTableAction: EventEmitter<string> = new EventEmitter<string>();
   
   constructor(
     private readonly uiServie: UIService, 
     private readonly dialog: MatDialog
   ) { }
+
+  ngOnInit() {
+    this.records = this.recordsList;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.recordsList) {
+      this.records = this.recordsList;
+    }
+  }
 
   openDeleteTablePopup() {
     this.uiServie.showConfirmationPopup({
@@ -38,7 +52,9 @@ export class TableComponent {
       maxHeight: '98vh',
       disableClose: true,
       data: {
-        table: this.table
+        table: this.table,
+        databaseName: this.databaseName,
+        recordsList: this.records
       }
     });
   }
