@@ -9,7 +9,6 @@ const findItemInList = (array, prop, value) => {
 
 const canInsertRecordWithUniqueValue = (attributes, value, records) => {
     for (let i = 0; i < attributes.length; i++) {
-        console.log(attributes[i].isUnique);
         if (attributes[i].isUnique === "1") {
             const values = value.split('#');
 
@@ -35,8 +34,43 @@ const canInsertRecordWithPrimaryKey = (value, records) => {
     return true;
 }
 
+const isReferencedByForeignKey = (referencedTable, tablesList) => {
+    let isReferenced = false;
+    tablesList.forEach(table => {
+        if (referencedTable.tableName !== table.tableName) {
+            table.foreignKeys.forEach(foreignKey => {
+                if (foreignKey.referencedTableName === referencedTable.tableName) {
+                    isReferenced = true;
+                    return;
+                }
+            })
+        }
+        if (isReferenced) {
+            return;
+        }
+    })
+
+    return isReferenced;
+}
+
+const processData = (data) => {
+    const processedData = data.map(element => {
+        let valueArray = [];
+        valueArray.push(element.key);
+
+        const values = element.value.split('#');
+        valueArray = valueArray.concat(values);
+        
+        return valueArray
+    });
+
+    return processedData;
+} 
+
 module.exports = { 
     findItemInList,
     canInsertRecordWithUniqueValue,
-    canInsertRecordWithPrimaryKey
+    canInsertRecordWithPrimaryKey,
+    isReferencedByForeignKey,
+    processData
 }

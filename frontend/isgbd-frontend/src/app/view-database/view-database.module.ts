@@ -16,6 +16,7 @@ import { DisplayTableComponent } from './components/display-table/display-table.
 import { CreateIndexComponent } from './components/create-index/create-index.component';
 import { RecordsTableComponent } from './components/records-table/records-table.component';
 import { InsertInTableComponent } from './components/insert-in-table/insert-in-table.component';
+import { DeleteFromTableComponent } from './components/delete-from-table/delete-from-table.component';
 
 
 
@@ -26,7 +27,7 @@ import { InsertInTableComponent } from './components/insert-in-table/insert-in-t
     ViewTablesComponent, 
     TableComponent, 
     AddTableComponent, 
-    DisplayTableComponent, CreateIndexComponent, RecordsTableComponent, InsertInTableComponent
+    DisplayTableComponent, CreateIndexComponent, RecordsTableComponent, InsertInTableComponent, DeleteFromTableComponent
   ],
   imports: [
     CommonModule,
@@ -41,7 +42,8 @@ import { InsertInTableComponent } from './components/insert-in-table/insert-in-t
     AddTableComponent,
     DisplayTableComponent,
     CreateIndexComponent,
-    InsertInTableComponent
+    InsertInTableComponent,
+    DeleteFromTableComponent
   ]
 })
 export class ViewDatabaseModule { }

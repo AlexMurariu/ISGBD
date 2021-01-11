@@ -135,13 +135,7 @@
                     "primaryKey": [
                         "id"
                     ],
-                    "foreignKeys": [
-                        {
-                            "referencedTableName": "supercar",
-                            "referencedAttributeName": "id_supercar",
-                            "attributeName": "car_id"
-                        }
-                    ],
+                    "foreignKeys": [],
                     "indexFiles": [
                         {
                             "indexName": "IndexName",
@@ -189,13 +183,7 @@
                     "primaryKey": [
                         "id"
                     ],
-                    "foreignKeys": [
-                        {
-                            "referencedTableName": "supercar",
-                            "referencedAttributeName": "id_supercar",
-                            "attributeName": "car_id"
-                        }
-                    ],
+                    "foreignKeys": [],
                     "indexFiles": []
                 }
             ]

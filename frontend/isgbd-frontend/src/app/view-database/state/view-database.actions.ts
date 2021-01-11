@@ -19,7 +19,10 @@ export const enum ViewDatabaseActionTypes {
     GetTableRecordsFail = '[View Database] Get Table Records Fail',
     InsertTableRecord = '[View Database] Insert Table Record',
     InsertTableRecordSuccess = '[View Database] Insert Table Record Success',
-    InsertTableRecordFail = '[View Database] Insert Table Record Fail'
+    InsertTableRecordFail = '[View Database] Insert Table Record Fail',
+    DeleteTableRecords = '[View Database] Delete Table Records',
+    DeleteTableRecordsSuccess = '[View Database] Delete Table Records Success',
+    DeleteTableRecordsFail = '[View Database] Delete Table Records Fail'
 }
 
 export class GetDatabaseTables implements Action {
@@ -128,6 +131,22 @@ export class InsertTableRecordFail implements Action {
     constructor(public payload: string) {}
 }
 
+export class DeleteTableRecords implements Action {
+    readonly type = ViewDatabaseActionTypes.DeleteTableRecords;
+
+    constructor(public payload: {databaseName: string, tableName: string, conditions: {attributeName: string, condition: string, value: string}}) { }
+}
+
+export class DeleteTableRecordsSuccess implements Action {
+    readonly type = ViewDatabaseActionTypes.DeleteTableRecordsSuccess;
+}
+
+export class DeleteTableRecordsFail implements Action {
+    readonly type = ViewDatabaseActionTypes.DeleteTableRecordsFail;
+
+    constructor(public payload: string) { }
+}
+
 
 
 export type ViewDatabaseActions = GetDatabaseTables
@@ -147,4 +166,7 @@ export type ViewDatabaseActions = GetDatabaseTables
     | GetTableRecordsFail
     | InsertTableRecord
     | InsertTableRecordSuccess
-    | InsertTableRecordFail;
+    | InsertTableRecordFail
+    | DeleteTableRecords
+    | DeleteTableRecordsSuccess
+    | DeleteTableRecordsFail;

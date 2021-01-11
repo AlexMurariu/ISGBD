@@ -7,11 +7,12 @@ import { IndexModel, TableModel } from 'src/app/shared/models';
 import { State } from 'src/app/state';
 import * as fromViewDatabase from '../../state';
 import * as fromSelectedDatabase from '../../../state/selected-database.selectors';
-import { CreateIndex, CreateTable, GetDatabaseTables, InsertTableRecord } from '../../state/view-database.actions';
+import { CreateIndex, CreateTable, DeleteTableRecords, GetDatabaseTables, InsertTableRecord } from '../../state/view-database.actions';
 import { ClearSelectedDatabase } from 'src/app/state/selected-database.actions';
 import { CreateIndexComponent } from '../../components/create-index/create-index.component';
 import { MatDialog } from '@angular/material/dialog';
 import * as _ from 'lodash';
+import { DeleteFromTableComponent } from '../../components/delete-from-table/delete-from-table.component';
 
 @Component({
   selector: 'app-view-database-shell',
@@ -131,6 +132,25 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
       databaseName: this.selectedDatabase,
       tableName,
       value
+    }));
+  }
+
+  openDeleteFromTableDialog() {
+    this.dialog.open(DeleteFromTableComponent, {
+      minWidth: "90%",
+      maxHeight: '98vh',
+      data: {
+        tablesList: this.tablesList,
+        deleteRecordCallback: this.deleteRecord
+      }
+    });
+  }
+
+  deleteRecord = (tableName: string, conditions: {attributeName: string, condition: string, value: string}) => {
+    this.store.dispatch(new DeleteTableRecords({
+      databaseName: this.selectedDatabase,
+      tableName,
+      conditions
     }));
   }
 }

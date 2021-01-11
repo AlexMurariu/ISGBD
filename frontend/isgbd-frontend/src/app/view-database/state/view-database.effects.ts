@@ -159,4 +159,26 @@ export class ViewDatabaseEffects {
             )
         )
     )
+
+    @Effect()
+    deleteTableRecords$: Observable<Action> = this.actions$.pipe(
+        ofType(viewDatabaseActions.ViewDatabaseActionTypes.DeleteTableRecords),
+        mergeMap((action: viewDatabaseActions.DeleteTableRecords) => 
+            this.viewDatabaseService.deleteTableRecord(action.payload.databaseName, action.payload.tableName, action.payload.conditions).pipe(
+                switchMap(data => {
+                        return [
+                            new AddToNotification(NotificationModel.createSuccessNotification('', 'Records deleted successfully!'))
+                        ]
+                    }
+                ),
+                catchError(err =>  {
+                    return of(
+                        new viewDatabaseActions.DeleteTableRecordsFail(err.error.text),
+                        new AddToNotification(NotificationModel.createErrorNotification('', err.error))
+                        )
+                    }
+                )
+            )
+        )
+    )
 }

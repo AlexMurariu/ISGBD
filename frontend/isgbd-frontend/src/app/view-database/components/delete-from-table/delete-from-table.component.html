@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="header">
+        <div class="title">Delete</div>
+    </div>
+    <div class="delete-record-form" [formGroup]="deleteRecordForm">
+        <mat-form-field class="delete-record-form-field">
+            <mat-label>Table</mat-label>
+            <mat-select formControlName="tableName">
+                <mat-option *ngFor="let table of data.tablesList" [value]="table.tableName">
+                    {{ table.tableName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="delete-record-form-field">
+            <mat-label>Attribute</mat-label>
+            <mat-select formControlName="attributeName">
+                <mat-option *ngFor="let attribute of attributesList" [value]="attribute.attributeName">
+                    {{ attribute.attributeName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="delete-record-form-field">
+            <mat-label>Condition</mat-label>
+            <mat-select formControlName="condition">
+                <mat-option *ngFor="let condition of conditions" [value]="condition">
+                    {{ getConditionSign(condition) }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="delete-record-form-field">
+            <input matInput formControlName="value" placeholder="Value" autocomplete="off">
+        </mat-form-field>
+    </div>
+    <div class="buttons-container">
+        <button mat-raised-button (click)="cancel()">Cancel</button>
+        <button class="create-button" mat-raised-button color="primary" (click)="deleteRecord()">Delete</button>
+    </div>
+</div>

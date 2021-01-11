@@ -17,6 +17,7 @@ export class ActionsComponent implements OnInit {
   @Output() createTableAction: EventEmitter<any> = new EventEmitter<any>();
   @Output() createIndexAction: EventEmitter<any> = new EventEmitter<any>();
   @Output() insertInTableAction: EventEmitter<any> = new EventEmitter<any>();
+  @Output() deleteFromTableAction: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private readonly fb: FormBuilder) { }
 
@@ -49,5 +50,9 @@ export class ActionsComponent implements OnInit {
 
   insertRecordsInTable() {
     this.insertInTableAction.emit();
+  }
+
+  deleteRecordsFromTable() {
+    this.deleteFromTableAction.emit();
   }
 }

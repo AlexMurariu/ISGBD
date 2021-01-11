@@ -67,10 +67,21 @@ export class ViewDatabaseService {
             )
     }
 
-    insertTableRecord(databaseName: string, tableName: string, value: {key: string, value: string}): Observable<{key: string, value: string}[]> {
-        const url = `${this.baseUrl}/database/${databaseName}/table/${tableName}/insert`;
+    insertTableRecord(databaseName: string, tableName: string, value: {key: string, value: string}): Observable<any> {
+        const url = `${this.baseUrl}/database/${databaseName}/table/${tableName}/data`;
 
         return this.http.post<any>(url, value)
+        .pipe(
+            map((response: any) => {
+                return [];
+            })
+        )
+    }
+
+    deleteTableRecord(databaseName: string, tableName: string, conditions: {attributeName: string, condition: string, value: string}): Observable<any> {
+        const url = `${this.baseUrl}/database/${databaseName}/table/${tableName}/delete-data`;
+
+        return this.http.post<any>(url, conditions)
         .pipe(
             map((response: any) => {
                 return [];

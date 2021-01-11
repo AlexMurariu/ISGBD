@@ -39,7 +39,60 @@ async function insertDataInDB(databaseName, tableName, data) {
     });
 }
 
+async function deleteDataInDB(databaseName, table, conditions, records) {
+    const client = new MongoClient(MongoUrl, {useUnifiedTopology: true});
+    await client.connect();
+
+    const db = client.db(databaseName);
+
+    const attributeIndex = table.attributes.findIndex(attribute => attribute.attributeName === conditions.attributeName);
+
+    let recordsList = records.filter(record => {
+        if (conditions.condition === 'eq') {
+            return record[attributeIndex] !== conditions.value;
+        } else if (conditions.condition === 'neq') {
+            return record[attributeIndex] === conditions.value;
+        } else if (conditions.condition === 'gt') {
+            return record[attributeIndex] <= conditions.value;
+        } else if (conditions.condition < 'gte') {
+            return record[attributeIndex] >= conditions.value;
+        } else if (conditions.condition >= 'lt') {
+            return record[attributeIndex] < conditions.value;
+        } else if (conditions.condition === 'lte') {
+            return record[attributeIndex] > conditions.value;
+        }
+    });
+
+    recordsList = recordsList.map(record => {
+        let value = '';
+
+        for (let i = 1; i < record.length; i++) {
+            value = value + record[i] + '#';
+        }
+
+        return {
+            key: record[0],
+            value: value.substr(0, value.length - 1)
+        }
+    });
+
+    db.collection(table.tableName).deleteMany({});
+    if (recordsList.length) {
+        db.collection(table.tableName).insertMany(recordsList, (err, res) => {
+            if (err) {
+                console.log(`Error for deleting data from ${table.tableName}`);
+                return false;
+            }
+            console.log(`Data delete from ${table.tableName}`);
+            return true;
+        });
+    }
+
+    return true;
+}
+
 module.exports = { 
     getDatabasesFromDB,
-    insertDataInDB
+    insertDataInDB,
+    deleteDataInDB
 }
