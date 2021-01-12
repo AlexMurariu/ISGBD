@@ -1,3 +1,5 @@
+const { getDatabasesFromDB } = require("./dbFunctions");
+
 const findItemInList = (array, prop, value) => {
     return array.findIndex((database) => {
         if (database[prop] === value) {
@@ -34,10 +36,16 @@ const canInsertRecordWithPrimaryKey = (value, records) => {
     return true;
 }
 
-const isReferencedByForeignKey = (referencedTable, tablesList) => {
+function isReferencedByForeignKey(databaseName, referencedTable, tablesList) {
     let isReferenced = false;
-    tablesList.forEach(table => {
+    tablesList.forEach(async (table) => {
         if (referencedTable.tableName !== table.tableName) {
+            const refferencedTableData = await getDatabasesFromDB(databaseName, referencedTable.tableName);
+
+            if (!refferencedTableData.length) {
+                isReferenced = false;
+            }
+
             table.foreignKeys.forEach(foreignKey => {
                 if (foreignKey.referencedTableName === referencedTable.tableName) {
                     isReferenced = true;

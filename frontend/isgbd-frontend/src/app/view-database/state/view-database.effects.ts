@@ -151,8 +151,8 @@ export class ViewDatabaseEffects {
                 ),
                 catchError(err =>  {
                     return of(
-                        new viewDatabaseActions.InsertTableRecordFail(err.error.text),
-                        new AddToNotification(NotificationModel.createErrorNotification('', err.error.text))
+                        new viewDatabaseActions.InsertTableRecordFail(err.error),
+                        new AddToNotification(NotificationModel.createErrorNotification('', err.error))
                         )
                     }
                 )

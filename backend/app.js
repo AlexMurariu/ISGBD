@@ -271,11 +271,12 @@ app.post("/database/:databaseName/table/:tableName/delete-data", async (req, res
 
         if (tableIndex !== -1) {
             const dataFromDb = await getDatabasesFromDB(databaseName, tableName);
+            const isReferencedByForeignKey = await utils.isReferencedByForeignKey(databaseName ,tableList[tableIndex], tableList);
 
             if (!dataFromDb.length) {
                 res.status(404);
                 res.send('There are no records in this table!');
-            } else if (utils.isReferencedByForeignKey(tableList[tableIndex], tableList)) {
+            } else if (isReferencedByForeignKey) {
                 res.status(400);
                 res.send('Cannot delete record, because of the foreign key constraint!');
             } else {   
