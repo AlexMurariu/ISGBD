@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewChild, SimpleChanges } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AttributeModel } from 'src/app/shared/models';
 
@@ -16,6 +17,7 @@ export class RecordsTableComponent implements OnInit {
   @Input() primaryKey: string[];
   @Input() recordsList: {key: string, value: string}[];
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor() { }
   

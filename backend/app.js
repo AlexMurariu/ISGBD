@@ -234,13 +234,17 @@ app.post("/database/:databaseName/table/:tableName/data", async (req, res) => {
             const dataFromDb = await getDatabasesFromDB(databaseName, tableName);
             const hasDuplicateUniqueValue = !utils.canInsertRecordWithUniqueValue(tableList[tableIndex].attributes, data.value, dataFromDb);
             const hasDuplicatePrimaryKey = !utils.canInsertRecordWithPrimaryKey(data.key, dataFromDb);
-
+            const hasForeignKeyValue = await utils.canInsertWithForeignKeyValue(databaseName, tableList[tableIndex].foreignKeys, data.value, tableList);
+       
             if (hasDuplicatePrimaryKey) {
                 res.status(400);
                 res.send("Primary key value should not repeat itself");
             } else if (hasDuplicateUniqueValue) {
                 res.status(400);
                 res.send("One of the attributes is unique, and it's value must be different");
+            } else if (!hasForeignKeyValue) {
+                res.status(400);
+                res.send("The inserted value does not exist in the referenced table");
             } else {
                 const insertionSuccessful = insertDataInDB(databaseName, tableName, data);
             
