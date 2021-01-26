@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const utils = require("./utils");
 const cors = require('cors');
-const { getDatabasesFromDB, insertDataInDB, deleteDataInDB } = require("./dbFunctions");
+const { getDatabasesFromDB, insertDataInDB, deleteDataInDB, createIndexTable, deleteAllFromTable } = require("./dbFunctions");
 
 const app = express();
 app.use(bodyParser.json());
@@ -149,7 +149,7 @@ app.delete("/database/:databaseName/table/:tableName", (req, res) => {
     }
 });
 
-app.post("/database/:databaseName/table/:tableName/index", (req, res) => {
+app.post("/database/:databaseName/table/:tableName/index", async (req, res) => {
     const databaseFromFile = readFromFile(FILE_NAME);
     const databaseName = req.params.databaseName;
     const tableName = req.params.tableName;
@@ -164,7 +164,7 @@ app.post("/database/:databaseName/table/:tableName/index", (req, res) => {
         const tableIndex = utils.findItemInList(tableList, 'tableName', tableName);
 
         if (tableIndex !== -1) {
-            const indexList = tableList[tableIndex].indexFiles;
+            const indexList = tableList[tableIndex].indexFiles || [];
             const indexPozition = utils.findItemInList(indexList, 'indexName', insertedIndex.indexName);
 
             if (indexPozition !== -1) {
@@ -174,10 +174,21 @@ app.post("/database/:databaseName/table/:tableName/index", (req, res) => {
                 const attrList = tableList[tableIndex].attributes;
                 const attribute = insertedIndex.indexAttribute;
                 const attributeIndex = utils.findItemInList(attrList, 'attributeName', attribute);
+                const isForeignKey = !!utils.isForeignKey(attribute, tableList[tableIndex].foreignKeys);
+                const isUnique = utils.isUniqueAttribute(attribute, attrList);
+                const indexPositionInAttributeList = utils.getIndexPositionFromAttributeList(attribute, attrList) - tableList[tableIndex].primaryKey.length;
 
                 if (attributeIndex !== -1) {
                     indexList.push(insertedIndex);
                     fs.writeFileSync(FILE_NAME, JSON.stringify(databaseFromFile));
+
+                    const dataFromDb = await getDatabasesFromDB(databaseName, tableName);
+                    
+                    if (isForeignKey || isUnique) {
+                        const indexGeneratedData = utils.generateIndexData(dataFromDb, indexPositionInAttributeList, isForeignKey, isUnique);
+                        createIndexTable(databaseName, tableName, insertedIndex.indexName, attribute, indexGeneratedData);
+                    }
+
                     res.send(databaseFromFile.databases[databaseIndex].tables);
                 } else {
                     res.status(404);
@@ -232,22 +243,64 @@ app.post("/database/:databaseName/table/:tableName/data", async (req, res) => {
 
         if (tableIndex !== -1) {
             const dataFromDb = await getDatabasesFromDB(databaseName, tableName);
-            const hasDuplicateUniqueValue = !utils.canInsertRecordWithUniqueValue(tableList[tableIndex].attributes, data.value, dataFromDb);
             const hasDuplicatePrimaryKey = !utils.canInsertRecordWithPrimaryKey(data.key, dataFromDb);
-            const hasForeignKeyValue = await utils.canInsertWithForeignKeyValue(databaseName, tableList[tableIndex].foreignKeys, data.value, tableList);
-       
+            let foreignKeyValueExists = true;
+            let isUniqueValue = true;
+
+            for (let i = 0; i < tableList[tableIndex].foreignKeys.length; i++) {   
+                const foreignKey = tableList[tableIndex].foreignKeys[i];
+                const parentTableData = await getDatabasesFromDB(databaseName, foreignKey.referencedTableName);
+                const foreignKeyValueExistsInParentTable = await utils.foreignKeyValueExists(parentTableData, foreignKey, data, tableList[tableIndex].attributes, tableList[tableIndex].primaryKey.length);
+                                
+                if (!foreignKeyValueExistsInParentTable) {
+                    foreignKeyValueExists = false;
+                }
+            }
+
+            for (let i = 0; i < tableList[tableIndex].indexFiles.length; i++) {
+                const index = tableList[tableIndex].indexFiles[i];
+                const isIndexUnique = utils.isUniqueAttribute(index.indexAttribute, tableList[tableIndex].attributes);
+
+                if (isIndexUnique) {
+                    const indexData = await getDatabasesFromDB(databaseName, tableName + index.indexAttribute + index.indexName);
+                    const attributePosition = utils.findItemInList(tableList[tableIndex].attributes, 'attributeName', index.indexAttribute) - tableList[tableIndex].primaryKey.length;
+                    const values = data.value.split("#");
+                    const valueExists =  indexData.find(indexValue => indexValue.key === values[attributePosition])
+                    
+                    if (valueExists) {
+                        isUniqueValue = false;
+                    }
+                }
+            }
+
             if (hasDuplicatePrimaryKey) {
                 res.status(400);
                 res.send("Primary key value should not repeat itself");
-            } else if (hasDuplicateUniqueValue) {
+            } else if (!foreignKeyValueExists) {
                 res.status(400);
-                res.send("One of the attributes is unique, and it's value must be different");
-            } else if (!hasForeignKeyValue) {
+                res.send("The value inserted for the foreign key does not exist!");
+            } else if (!isUniqueValue) {
                 res.status(400);
-                res.send("The inserted value does not exist in the referenced table");
+                res.send("The value inserted for the unique attribute is not unique!");
             } else {
-                const insertionSuccessful = insertDataInDB(databaseName, tableName, data);
+                const newDataForDb = dataFromDb.concat([data]);
+
+                for (let i = 0; i < tableList[tableIndex].indexFiles.length; i++) {
+                    const indexFile = tableList[tableIndex].indexFiles[i];
+                    const isForeignKey = !!utils.isForeignKey(indexFile.indexAttribute, tableList[tableIndex].foreignKeys);
+                    const isUnique = utils.isUniqueAttribute(indexFile.indexAttribute, tableList[tableIndex].attributes);
+                    const indexPositionInAttributeList = 
+                        utils.getIndexPositionFromAttributeList(indexFile.indexAttribute, tableList[tableIndex].attributes) - 
+                        tableList[tableIndex].primaryKey.length;
+                    const indexGeneratedData = utils.generateIndexData(newDataForDb, indexPositionInAttributeList, isForeignKey, isUnique);
+                    
+                    deleteAllFromTable(databaseName, tableName + indexFile.indexAttribute + indexFile.indexName);
+                    createIndexTable(databaseName, tableName, indexFile.indexName, indexFile.indexAttribute, indexGeneratedData);
+                }
+               
             
+                const insertionSuccessful = insertDataInDB(databaseName, tableName, data);
+
                 if (insertionSuccessful) {
                     res.send([]);
                 } else {
@@ -275,15 +328,11 @@ app.post("/database/:databaseName/table/:tableName/delete-data", async (req, res
 
         if (tableIndex !== -1) {
             const dataFromDb = await getDatabasesFromDB(databaseName, tableName);
-            const isReferencedByForeignKey = await utils.isReferencedByForeignKey(databaseName ,tableList[tableIndex], tableList);
 
             if (!dataFromDb.length) {
                 res.status(404);
                 res.send('There are no records in this table!');
-            } else if (isReferencedByForeignKey) {
-                res.status(400);
-                res.send('Cannot delete record, because of the foreign key constraint!');
-            } else {   
+            } else { 
                 const processedData = utils.processData(dataFromDb);
                 
                 const deletionSuccessful = await deleteDataInDB(databaseName, tableList[tableIndex], conditions, processedData);

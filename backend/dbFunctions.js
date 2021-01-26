@@ -24,6 +24,23 @@ async function getDatabasesFromDB(databaseName, tableName) {
     return tableData;
 }
 
+async function createIndexTable(databaseName, tableName, indexName, attributeName, data) {
+    const client = new MongoClient(MongoUrl, {useUnifiedTopology: true});
+    await client.connect();
+    let indexTableName = tableName + attributeName + indexName;
+
+    const db = client.db(databaseName);
+    db.collection(indexTableName).insertMany(data, (err, res) => {
+        if (err) {
+            console.log(`Error for inserting data in ${indexTableName}`);
+            return false;
+        }
+
+        console.log(`Data inserted in ${indexTableName}`);
+        return true;
+    })
+}
+
 async function insertDataInDB(databaseName, tableName, data) {
     const client = new MongoClient(MongoUrl, {useUnifiedTopology: true});
     await client.connect();
@@ -37,6 +54,14 @@ async function insertDataInDB(databaseName, tableName, data) {
         console.log(`Data inserted in ${tableName}`);
         return true;
     });
+}
+
+async function deleteAllFromTable(databaseName, tableName, data) {
+    const client = new MongoClient(MongoUrl, {useUnifiedTopology: true});
+    await client.connect();
+
+    const db = client.db(databaseName);
+    db.collection(tableName).deleteMany({});
 }
 
 async function deleteDataInDB(databaseName, table, conditions, records) {
@@ -94,5 +119,7 @@ async function deleteDataInDB(databaseName, table, conditions, records) {
 module.exports = { 
     getDatabasesFromDB,
     insertDataInDB,
-    deleteDataInDB
+    deleteDataInDB,
+    createIndexTable,
+    deleteAllFromTable
 }

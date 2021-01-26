@@ -1,5 +1,3 @@
-const { getDatabasesFromDB } = require("./dbFunctions");
-
 const findItemInList = (array, prop, value) => {
     return array.findIndex((database) => {
         if (database[prop] === value) {
@@ -7,24 +5,6 @@ const findItemInList = (array, prop, value) => {
         }
         return false;
     });
-}
-
-const canInsertRecordWithUniqueValue = (attributes, value, records) => {
-    for (let i = 0; i < attributes.length; i++) {
-        if (attributes[i].isUnique === "1") {
-            const values = value.split('#');
-
-            for (let j = 0; j < records.length; j++) {
-                const recordValues = records[j].value.split("#");
-                
-                if (values[i] === recordValues[i]) {
-                    return false;
-                }
-            }
-        }
-    }
-    
-    return true
 }
 
 const canInsertRecordWithPrimaryKey = (value, records) => {
@@ -36,62 +16,67 @@ const canInsertRecordWithPrimaryKey = (value, records) => {
     return true;
 }
 
-async function canInsertWithForeignKeyValue(databaseName, foreignKeys, value, tables) {
-    if (!foreignKeys.length) {
-        return true;
-    }
-
-    let goodValue = false;
-    const values = value.split('#');
-
-    for (let i = 0; i < foreignKeys.length; i++) {
-        for (let j = 0; j < tables.length; j++) {
-            if (tables[j].tableName === foreignKeys[i].referencedTableName) {
-                const refferencedTableData = await getDatabasesFromDB(databaseName, tables[j].tableName);
-                
-                for (let k = 0; k < refferencedTableData.length; k++) {
-                    let recordValues = refferencedTableData[k].value.split('#');
-                    recordValues.push(refferencedTableData[k].key);
-                    
-                    for (let m = 0; m < values.length; m++) {
-                        if (recordValues.findIndex(foundValue => foundValue === values[m]) !== -1) {
-                            goodValue = true;
-                            break;
-                        }
-                    }
-                }
-            }       
-        }
-    }
-
-    return goodValue;
+const isForeignKey = (attributeName, foreignKeyList) => {
+    return foreignKeyList.find(foreignKey => foreignKey.attributeName === attributeName);
 }
 
-async function isReferencedByForeignKey(databaseName, referencedTable, tablesList) {
-    let isReferenced = false;
+const isUniqueAttribute = (attributeName, attributeList) => {
+    return attributeList.find(attribute => attribute.attributeName === attributeName).isUnique;
+}
 
-    for (let i = 0; i < tablesList.length; i++) {
-        if (referencedTable.tableName !== tablesList[i].tableName) {
-            const refferencedTableData = await getDatabasesFromDB(databaseName, referencedTable.tableName);
+const generateIndexData = (data, indexPosition, isForeign, isUnique) => {
+    let values = [];
 
-            if (!refferencedTableData.length) {
-                isReferenced = false;
-            }
+    if (isForeign) {
+        for (let i = 0; i < data.length; i++) {
+            let indexValues = [];
+            const valuesI = data[i].value.split('#');
+            const foreignKeyValueI = valuesI[indexPosition];
 
-            for (let j = 0; j < tablesList[i].foreignKeys.length; j++) {
-                if (tablesList[i].foreignKeys[j].referencedTableName === referencedTable.tableName) {
-                    isReferenced = true;
-                    break;
+            const valueExists = values.find(indexRecord => indexRecord.key === foreignKeyValueI);
+
+            if (!valueExists) {
+
+                
+                for (let j = 0; j < data.length; j++) {
+                    const valuesJ = data[j].value.split('#');
+                    const foreignKeyValueJ = valuesJ[indexPosition];
+                    
+                    if (foreignKeyValueI === foreignKeyValueJ) {
+                        indexValues.push(data[j].key);
+                    }
                 }
-            }
 
-            if (isReferenced) {
-                break;
+                values.push({key: foreignKeyValueI, value: indexValues});
             }
+        }
+    } else if (isUnique) {
+        for (let i = 0; i < data.length; i++) {
+            const recordValues = data[i].value.split('#');
+            const foreignKeyValue = recordValues[indexPosition];
+
+            values.push({key: foreignKeyValue, value: data[i].key});
         }
     }
 
-    return isReferenced;
+    return values;
+}
+
+const getIndexPositionFromAttributeList = (attributeName, attributeList) => {
+    return attributeList.findIndex(attribute => attribute.attributeName === attributeName);
+}
+
+const foreignKeyValueExists = async (parentTableData, foreignKey, insertedRecordValue, attributeList, primaryKeysLength) => {
+    const values = insertedRecordValue.value.split('#');
+    let valueExists = false;
+
+    const foreignKeyPosition = getIndexPositionFromAttributeList(foreignKey.attributeName, attributeList) - primaryKeysLength;
+    
+    if (parentTableData.find(record => record.key === values[foreignKeyPosition])) {
+        valueExists = true;
+    }
+    
+    return valueExists;
 }
 
 const processData = (data) => {
@@ -110,9 +95,11 @@ const processData = (data) => {
 
 module.exports = { 
     findItemInList,
-    canInsertRecordWithUniqueValue,
     canInsertRecordWithPrimaryKey,
-    isReferencedByForeignKey,
-    processData,
-    canInsertWithForeignKeyValue
+    isForeignKey,
+    isUniqueAttribute,
+    generateIndexData,
+    getIndexPositionFromAttributeList,
+    foreignKeyValueExists,
+    processData
 }
