@@ -1,1 +1,155 @@
-{"databases":[{"dataBaseName":"Ships3","tables":[]},{"dataBaseName":"Ships5","tables":[]},{"dataBaseName":"Ships7","tables":[]},{"dataBaseName":"Ships9","tables":[]},{"dataBaseName":"Ships10","tables":[]},{"dataBaseName":"Ships11","tables":[]},{"dataBaseName":"Ships12","tables":[]},{"dataBaseName":"Ships15","tables":[]},{"dataBaseName":"Ships13","tables":[]},{"dataBaseName":"Ships111111","tables":[]},{"dataBaseName":"Ships","tables":[]},{"dataBaseName":"SomeShips","tables":[]},{"dataBaseName":"Database","tables":[]},{"dataBaseName":"University","tables":[{"tableName":"Group","fileName":null,"rowLength":null,"attributes":[{"attributeName":"GID","type":"integer","length":"GID","isNull":false,"isUnique":false},{"attributeName":"Name","type":"varchar","length":"Name","isNull":null,"isUnique":null}],"primaryKey":["GID"],"foreignKeys":[],"indexFiles":[]},{"tableName":"Student","fileName":null,"rowLength":null,"attributes":[{"attributeName":"SID","type":"integer","length":"SID","isNull":false,"isUnique":false},{"attributeName":"Name","type":"varchar","length":"Name","isNull":null,"isUnique":null},{"attributeName":"Age","type":"integer","length":"Age","isNull":null,"isUnique":null},{"attributeName":"UniqueAttribute","type":"varchar","length":"UniqueAttribute","isNull":null,"isUnique":true},{"attributeName":"GroupID","type":"integer","length":"GroupID","isNull":null,"isUnique":null}],"primaryKey":["SID"],"foreignKeys":[{"referencedTableName":"Group","referencedAttributeName":"GID","attributeName":"GroupID"}],"indexFiles":[{"indexName":"FKStudentIndex","keyLength":null,"isUnique":null,"indexType":null,"indexAttribute":"GroupID"},{"indexName":"UniqueStudentIndex","keyLength":null,"isUnique":null,"indexType":null,"indexAttribute":"UniqueAttribute"}]}]}]}
+{
+    "databases": [
+        {
+            "dataBaseName": "Ships3",
+            "tables": []
+        },
+        {
+            "dataBaseName": "Ships5",
+            "tables": []
+        },
+        {
+            "dataBaseName": "Ships7",
+            "tables": []
+        },
+        {
+            "dataBaseName": "Ships9",
+            "tables": []
+        },
+        {
+            "dataBaseName": "Ships10",
+            "tables": []
+        },
+        {
+            "dataBaseName": "Ships11",
+            "tables": []
+        },
+        {
+            "dataBaseName": "Ships12",
+            "tables": []
+        },
+        {
+            "dataBaseName": "Ships15",
+            "tables": []
+        },
+        {
+            "dataBaseName": "Ships13",
+            "tables": []
+        },
+        {
+            "dataBaseName": "Ships111111",
+            "tables": []
+        },
+        {
+            "dataBaseName": "Ships",
+            "tables": []
+        },
+        {
+            "dataBaseName": "SomeShips",
+            "tables": []
+        },
+        {
+            "dataBaseName": "Database",
+            "tables": []
+        },
+        {
+            "dataBaseName": "University",
+            "tables": [
+                {
+                    "tableName": "Group",
+                    "fileName": null,
+                    "rowLength": null,
+                    "attributes": [
+                        {
+                            "attributeName": "GID",
+                            "type": "integer",
+                            "length": "GID",
+                            "isNull": false,
+                            "isUnique": false
+                        },
+                        {
+                            "attributeName": "Name",
+                            "type": "varchar",
+                            "length": "Name",
+                            "isNull": null,
+                            "isUnique": null
+                        }
+                    ],
+                    "primaryKey": [
+                        "GID"
+                    ],
+                    "foreignKeys": [],
+                    "indexFiles": []
+                },
+                {
+                    "tableName": "Student",
+                    "fileName": null,
+                    "rowLength": null,
+                    "attributes": [
+                        {
+                            "attributeName": "SID",
+                            "type": "integer",
+                            "length": "SID",
+                            "isNull": false,
+                            "isUnique": false
+                        },
+                        {
+                            "attributeName": "Name",
+                            "type": "varchar",
+                            "length": "Name",
+                            "isNull": null,
+                            "isUnique": null
+                        },
+                        {
+                            "attributeName": "Age",
+                            "type": "integer",
+                            "length": "Age",
+                            "isNull": null,
+                            "isUnique": null
+                        },
+                        {
+                            "attributeName": "UniqueAttribute",
+                            "type": "varchar",
+                            "length": "UniqueAttribute",
+                            "isNull": null,
+                            "isUnique": true
+                        },
+                        {
+                            "attributeName": "GroupID",
+                            "type": "integer",
+                            "length": "GroupID",
+                            "isNull": null,
+                            "isUnique": null
+                        }
+                    ],
+                    "primaryKey": [
+                        "SID"
+                    ],
+                    "foreignKeys": [
+                        {
+                            "referencedTableName": "Group",
+                            "referencedAttributeName": "GID",
+                            "attributeName": "GroupID"
+                        }
+                    ],
+                    "indexFiles": [
+                        {
+                            "indexName": "FKStudentIndex",
+                            "keyLength": null,
+                            "isUnique": null,
+                            "indexType": null,
+                            "indexAttribute": "GroupID"
+                        },
+                        {
+                            "indexName": "UniqueStudentIndex",
+                            "keyLength": null,
+                            "isUnique": null,
+                            "indexType": null,
+                            "indexAttribute": "UniqueAttribute"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

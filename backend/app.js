@@ -333,16 +333,51 @@ app.post("/database/:databaseName/table/:tableName/delete-data", async (req, res
                 res.status(404);
                 res.send('There are no records in this table!');
             } else { 
-                const processedData = utils.processData(dataFromDb);
-                
-                const deletionSuccessful = await deleteDataInDB(databaseName, tableList[tableIndex], conditions, processedData);
-                
-                if (deletionSuccessful) {
-                    res.send([]);
+                const childTables = utils.getChildTables(tableName, tableList) || [];
+                const parentTableProcessedData = utils.processData(dataFromDb);
+                let canDeleteData = true;
+
+                for (let i = 0; i < childTables.length; i++) {
+                    const childTable = childTables[i];
+                    const fkIndex = utils.geyFKIndex(childTable.indexFiles, childTable.foreignKeys);
+                    let indexData = [];
+
+                    if (fkIndex) {
+                        const attributePosition = tableList[tableIndex].attributes.findIndex(attribute => attribute.attributeName === conditions.attributeName);
+
+                        indexData = await getDatabasesFromDB(databaseName, childTable.tableName + fkIndex.indexAttribute + fkIndex.indexName);
+                        canDeleteData = utils.checkIfValuesCanBeDeleted(parentTableProcessedData, indexData, conditions, attributePosition);
+                    }
+                }
+
+                if (canDeleteData) {
+                    const deletionSuccessful = await deleteDataInDB(databaseName, tableList[tableIndex], conditions, parentTableProcessedData);
+
+                    if (deletionSuccessful) {
+                        const dataAfterDeletionFromDb = await getDatabasesFromDB(databaseName, tableName);
+
+                        for (let i = 0; i < tableList[tableIndex].indexFiles.length; i++) {
+                            const indexFile = tableList[tableIndex].indexFiles[i];
+                            const isForeignKey = !!utils.isForeignKey(indexFile.indexAttribute, tableList[tableIndex].foreignKeys);
+                            const isUnique = utils.isUniqueAttribute(indexFile.indexAttribute, tableList[tableIndex].attributes);
+                            const indexPositionInAttributeList = 
+                                utils.getIndexPositionFromAttributeList(indexFile.indexAttribute, tableList[tableIndex].attributes) - 
+                                tableList[tableIndex].primaryKey.length;
+                            const indexGeneratedData = utils.generateIndexData(dataAfterDeletionFromDb, indexPositionInAttributeList, isForeignKey, isUnique);
+  
+                            deleteAllFromTable(databaseName, tableName + indexFile.indexAttribute + indexFile.indexName);
+                            createIndexTable(databaseName, tableName, indexFile.indexName, indexFile.indexAttribute, indexGeneratedData);
+                        }
+
+                        res.send([]);
+                    } else {
+                        res.status(500);
+                        res.send('Something went wrong while deleting the records!');
+                    }          
                 } else {
-                    res.status(500);
-                    res.send('Something went wrong while deleting the records!');
-                }   
+                    res.status(400);
+                    res.send("Can't delete records because the value is used in a child table!");
+                }
             }
         }
     }

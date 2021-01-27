@@ -93,6 +93,52 @@ const processData = (data) => {
     return processedData;
 } 
 
+const getChildTables = (tableName, tableList) => {
+    return tableList.filter(table => table.foreignKeys.find(foreignKey => foreignKey.referencedTableName === tableName));
+}
+
+const geyFKIndex = (indexFiles, foreignKeys) => {
+    let index = null;
+
+    indexFiles.forEach(indexFile => {
+        foreignKeys.forEach(foreignKey => {
+            if (foreignKey.attributeName === indexFile.indexAttribute) {
+                index = indexFile;
+            }
+        })
+    })
+
+    return index;
+} 
+
+const checkIfValuesCanBeDeleted = (tableData, indexData, conditions, attributePosition) => {
+    let canBeDeleted = true;
+
+    const filteredData = tableData.filter(record => {
+        if (conditions.condition === 'eq') {
+            return record[attributePosition] === conditions.value;
+        } else if (conditions.condition === 'neq') {
+            return record[attributePosition] !== conditions.value;
+        } else if (conditions.condition === 'gt') {
+            return record[attributePosition] > conditions.value;
+        } else if (conditions.condition === 'gte') {
+            return record[attributePosition] >= conditions.value;
+        } else if (conditions.condition === 'lt') {
+            return record[attributePosition] < conditions.value;
+        } else if (conditions.condition === 'lte') {
+            return record[attributePosition] <= conditions.value;
+        }
+    });
+
+    filteredData.forEach(record => {
+        if (indexData.find(indexRecord => indexRecord.key === record[attributePosition])) {
+            canBeDeleted = false;
+        }
+    });
+
+    return canBeDeleted;
+}
+
 module.exports = { 
     findItemInList,
     canInsertRecordWithPrimaryKey,
@@ -101,5 +147,8 @@ module.exports = {
     generateIndexData,
     getIndexPositionFromAttributeList,
     foreignKeyValueExists,
-    processData
+    processData,
+    getChildTables,
+    geyFKIndex,
+    checkIfValuesCanBeDeleted
 }

@@ -79,9 +79,9 @@ async function deleteDataInDB(databaseName, table, conditions, records) {
             return record[attributeIndex] === conditions.value;
         } else if (conditions.condition === 'gt') {
             return record[attributeIndex] <= conditions.value;
-        } else if (conditions.condition < 'gte') {
+        } else if (conditions.condition === 'gte') {
             return record[attributeIndex] >= conditions.value;
-        } else if (conditions.condition >= 'lt') {
+        } else if (conditions.condition === 'lt') {
             return record[attributeIndex] < conditions.value;
         } else if (conditions.condition === 'lte') {
             return record[attributeIndex] > conditions.value;
