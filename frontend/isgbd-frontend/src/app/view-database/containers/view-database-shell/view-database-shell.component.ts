@@ -1,3 +1,4 @@
+import { SelectFromTableComponent } from './../../components/select-from-table/select-from-table.component';
 import { InsertInTableComponent } from './../../components/insert-in-table/insert-in-table.component';
 import { AddTableComponent } from './../../components/add-table/add-table.component';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -7,7 +8,7 @@ import { IndexModel, TableModel } from 'src/app/shared/models';
 import { State } from 'src/app/state';
 import * as fromViewDatabase from '../../state';
 import * as fromSelectedDatabase from '../../../state/selected-database.selectors';
-import { CreateIndex, CreateTable, DeleteTableRecords, GetDatabaseTables, InsertTableRecord } from '../../state/view-database.actions';
+import { CreateIndex, CreateTable, DeleteTableRecords, GetDatabaseTables, InsertTableRecord, SelectRecords } from '../../state/view-database.actions';
 import { ClearSelectedDatabase } from 'src/app/state/selected-database.actions';
 import { CreateIndexComponent } from '../../components/create-index/create-index.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -152,5 +153,23 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
       tableName,
       conditions
     }));
+  }
+
+  openSelectFromTableDialog() {
+    this.dialog.open(SelectFromTableComponent, {
+      minWidth: "90%",
+      maxHeight: '98vh',
+      data: {
+        tablesList: this.tablesList,
+        selectRecordsCallback: this.selectRecords
+      }
+    });
+  }
+
+  selectRecords = (data: any) => {
+    this.store.dispatch(new SelectRecords({
+      databaseName: this.selectedDatabase,
+      ...data
+    }))
   }
 }

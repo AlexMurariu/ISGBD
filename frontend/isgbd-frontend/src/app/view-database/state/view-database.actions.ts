@@ -22,7 +22,13 @@ export const enum ViewDatabaseActionTypes {
     InsertTableRecordFail = '[View Database] Insert Table Record Fail',
     DeleteTableRecords = '[View Database] Delete Table Records',
     DeleteTableRecordsSuccess = '[View Database] Delete Table Records Success',
-    DeleteTableRecordsFail = '[View Database] Delete Table Records Fail'
+    DeleteTableRecordsFail = '[View Database] Delete Table Records Fail',
+    SelectRecords = '[View Database] Select Records',
+    SelectRecordsSuccess = '[View Database] Select Records Success',
+    SelectRecordsFail = '[View Database] Select Records Fail',
+    GenerateRecords = '[View Database] Generate Records',
+    GenerateRecordsSuccess = '[View Database] Generate Records Success',
+    GenerateRecordsFail = '[View Database] Generate Records Fail',
 }
 
 export class GetDatabaseTables implements Action {
@@ -147,7 +153,39 @@ export class DeleteTableRecordsFail implements Action {
     constructor(public payload: string) { }
 }
 
+export class SelectRecords implements Action {
+    readonly type = ViewDatabaseActionTypes.SelectRecords;
 
+    constructor(public payload: any) { }
+}
+
+export class SelectRecordsSuccess implements Action {
+    readonly type = ViewDatabaseActionTypes.SelectRecordsSuccess;
+
+    constructor(public payload: {data: string[], attributesList: string[]}) { }
+}
+
+export class SelectRecordsFail implements Action {
+    readonly type = ViewDatabaseActionTypes.SelectRecordsFail;
+
+    constructor(public payload: any) { }
+}
+
+export class GenerateRecords implements Action {
+    readonly type = ViewDatabaseActionTypes.GenerateRecords;
+
+    constructor(public payload: {databaseName: string, table: TableModel}) { }
+}
+
+export class GenerateRecordsSuccess implements Action {
+    readonly type = ViewDatabaseActionTypes.GenerateRecordsSuccess;
+}
+
+export class GenerateRecordsFail implements Action {
+    readonly type = ViewDatabaseActionTypes.GenerateRecordsFail;
+
+    constructor(public payload: string) { }
+}
 
 export type ViewDatabaseActions = GetDatabaseTables
     | GetDatabaseTablesSuccess
@@ -169,4 +207,10 @@ export type ViewDatabaseActions = GetDatabaseTables
     | InsertTableRecordFail
     | DeleteTableRecords
     | DeleteTableRecordsSuccess
-    | DeleteTableRecordsFail;
+    | DeleteTableRecordsFail
+    | SelectRecords
+    | SelectRecordsSuccess
+    | SelectRecordsFail
+    | GenerateRecords
+    | GenerateRecordsSuccess
+    | GenerateRecordsFail;

@@ -62,6 +62,12 @@ export class DeleteFromTableComponent implements OnInit {
     );
   }
 
+  ngOnDestroy() {
+    this.subscriptions.forEach(item => {
+      item.unsubscribe();
+    })
+  }
+
   get tableNameControl() {
     return this.deleteRecordForm.get("tableName");
   }

@@ -79,8 +79,4 @@ export class ManageDatabasesComponent implements OnInit, OnChanges {
       return true;
     })
   }
-
-  onFileChange(event) {
-    console.log(event.target.files)
-  }
 }

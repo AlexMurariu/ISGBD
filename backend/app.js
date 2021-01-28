@@ -382,3 +382,48 @@ app.post("/database/:databaseName/table/:tableName/delete-data", async (req, res
         }
     }
 });
+
+app.post("/database/:databaseName/table/:tableName/select-data", async (req, res) => {
+    const databaseFromFile = readFromFile(FILE_NAME);
+    const databaseName = req.params.databaseName;
+    const tableName = req.params.tableName;
+    const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
+    console.log(req.body);
+
+    if (databaseIndex === -1) {
+        res.status(404);
+        res.send('Database not found!');
+    } else {
+        const tableList = databaseFromFile.databases[databaseIndex].tables;
+        const tableIndex = utils.findItemInList(tableList, 'tableName', tableName);
+
+        if (tableIndex !== -1) {
+            const dataFromDb = await getDatabasesFromDB(databaseName, tableName);
+
+            if (!dataFromDb.length) {
+                res.status(404);
+                res.send('There are no records in this table!');
+            } else { 
+                
+            }
+        }
+    }
+});
+
+app.post("/database/:databaseName/generate-records", async (req, res) => {
+    const databaseFromFile = readFromFile(FILE_NAME);
+    const databaseName = req.params.databaseName;
+    const tableName = req.body.tableName;
+    const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
+
+    if (databaseIndex === -1) {
+        res.status(404);
+        res.send('Database not found!');
+    } else {
+        const tableList = databaseFromFile.databases[databaseIndex].tables;
+        const tableIndex = utils.findItemInList(tableList, 'tableName', tableName);
+
+        if (tableIndex !== -1) {
+        }
+    }
+});

@@ -181,4 +181,48 @@ export class ViewDatabaseEffects {
             )
         )
     )
+
+    @Effect()
+    selectTableRecords$: Observable<Action> = this.actions$.pipe(
+        ofType(viewDatabaseActions.ViewDatabaseActionTypes.SelectRecords),
+        mergeMap((action: viewDatabaseActions.SelectRecords) => 
+            this.viewDatabaseService.selectTableRecords(action.payload).pipe(
+                switchMap(data => {
+                        return [
+                            new viewDatabaseActions.SelectRecordsSuccess(data)
+                        ]
+                    }
+                ),
+                catchError(err =>  {
+                    return of(
+                        new viewDatabaseActions.SelectRecordsFail(err.error.text),
+                        new AddToNotification(NotificationModel.createErrorNotification('', err.error))
+                        )
+                    }
+                )
+            )
+        )
+    )
+
+    @Effect()
+    generateTableRecords$: Observable<Action> = this.actions$.pipe(
+        ofType(viewDatabaseActions.ViewDatabaseActionTypes.GenerateRecords),
+        mergeMap((action: viewDatabaseActions.GenerateRecords) => 
+            this.viewDatabaseService.generateTableRecords(action.payload.databaseName, action.payload.table).pipe(
+                switchMap((data: {data: string[], attributesList: string[]}) => {
+                        return [
+                            new AddToNotification(NotificationModel.createSuccessNotification('', 'Records generated successfully!'))
+                        ]
+                    }
+                ),
+                catchError(err =>  {
+                    return of(
+                        new viewDatabaseActions.GenerateRecordsFail(err.error.text),
+                        new AddToNotification(NotificationModel.createErrorNotification('', err.error))
+                        )
+                    }
+                )
+            )
+        )
+    )
 }

@@ -1,0 +1,61 @@
+.container {
+    width: 100%;
+    
+    .header {
+        width: 100%;
+
+        .title {
+            font-size: 25px;
+            font-weight: 500;
+        }
+    }
+
+    .select-records-form {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+
+        .top-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .conditions-container {
+            margin-top: 15px;
+
+            .title {
+                font-weight: 500;
+                font-size: 20px;
+                margin-right: 20px;
+            }
+
+            .conditions-content {
+                display: flex;
+                align-items: center;
+                
+                .select-records-form-field {
+                    margin-right: 50px;
+                }            
+            }
+        }
+
+        .checkbox {
+            margin-right: 15px;
+        }
+    }
+
+    .buttons-container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+
+        .create-button {
+            margin-left: 10px;
+        }
+    }
+}
+
+.condition-body {
+    display: flex;
+    align-items: center;
+}

@@ -17,6 +17,9 @@
         <button class="action-button" mat-raised-button color="primary" [disabled]="tablesList && !tablesList.length" (click)="deleteRecordsFromTable()">
             Delete
         </button>
+        <button class="action-button" mat-raised-button color="primary" [disabled]="tablesList && !tablesList.length" (click)="selectRecordsFromTable()">
+            Select
+        </button>
         <button class="action-button" mat-raised-button color="primary" (click)="findDatabase()">
             Find Database
         </button>

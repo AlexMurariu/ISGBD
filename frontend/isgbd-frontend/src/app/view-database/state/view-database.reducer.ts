@@ -6,6 +6,9 @@ const initialState: ViewDatabaseState = {
     tablesList: null,
     tableRecords: null,
     tablesListIsLoading: false,
+    selectedRecords: null,
+    selectedRecordsLoading: false,
+    generateRecordsLoading: false,
     error: ''
 };
 
@@ -58,6 +61,19 @@ export function reducer(state = initialState, action: ViewDatabaseActions): View
                 tableRecords: action.payload
             }
 
+
+        case ViewDatabaseActionTypes.GenerateRecords:
+            return {
+                ...state,
+                generateRecordsLoading: true
+            }    
+
+        case ViewDatabaseActionTypes.GenerateRecordsFail:
+        case ViewDatabaseActionTypes.GenerateRecordsSuccess:
+            return {
+                ...state,
+                generateRecordsLoading: false
+            }
         default:
             return state;
     }

@@ -88,4 +88,31 @@ export class ViewDatabaseService {
             })
         )
     }
+    
+    selectTableRecords(data: any): Observable<{data: string[], attributesList: string[]}> {
+        const url = `${this.baseUrl}/database/${data.databaseName}/table/${data.tableName}/select-data`;
+        const body = {
+            attributes: data.attributes,
+            conditions: data.conditions,
+            distinct: data.distinct
+        }
+        
+        return this.http.post<any>(url, body)
+        .pipe(
+            map((response: {data: string[], attributesList: string[]}) => {
+                return response;
+            })
+        )
+    }
+
+    generateTableRecords(databaseName: string, table: TableModel): Observable<any> {
+        const url = `${this.baseUrl}/database/${databaseName}/generate-records`;
+
+        return this.http.post<any>(url, table)
+        .pipe(
+            map((response: any) => {
+                return [];
+            })
+        )
+    }
 }

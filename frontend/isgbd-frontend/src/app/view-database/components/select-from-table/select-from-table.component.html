@@ -1,0 +1,75 @@
+<div class="container">
+    <div class="header">
+        <div class="title">Select</div>
+    </div>
+    <div class="select-records-form" [formGroup]="selectRecordsForm">
+        <div class="top-row">
+            <mat-form-field [ngStyle]="{'margin-right': '30px'}">
+                <mat-label>Table</mat-label>
+                <mat-select formControlName="tableName">
+                    <mat-option *ngFor="let table of data.tablesList" [value]="table.tableName">
+                        {{ table.tableName }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-checkbox color="primary" [checked]="distinct" (change)="selectDistinct($event)" [ngStyle]="{'font-size': '20px'}">
+                Distinct
+            </mat-checkbox>
+        </div>
+        <section *ngIf="tableNameControl.value">
+            <mat-checkbox class="checkbox" [disabled]="disableSelectAllOption" color="primary" (change)="selectAttributes($event)" [value]="'*'">
+                *
+            </mat-checkbox>
+            <mat-checkbox class="checkbox" 
+                [disabled]="disableOtherOptions"
+                color="primary" 
+                *ngFor="let attribute of getSelectedTable(tableNameControl.value)?.attributes" 
+                (change)="selectAttributes($event)" 
+                [value]="attribute.attributeName"
+            >
+                {{attribute.attributeName}}
+            </mat-checkbox>
+        </section>
+        <div class="conditions-container" *ngIf="isAttributeSelected">
+            <div class="title">Conditions</div>
+            <div class="conditions-content">
+                <mat-form-field class="select-records-form-field">
+                    <mat-label>Attribute</mat-label>
+                    <mat-select formControlName="attribute">
+                        <mat-option *ngFor="let attribute of getSelectedTable(tableNameControl.value)?.attributes" [value]="attribute.attributeName">
+                            {{ attribute.attributeName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="select-records-form-field">
+                    <mat-label>Condition</mat-label>
+                    <mat-select formControlName="condition">
+                        <mat-option *ngFor="let condition of conditions" [value]="condition">
+                            {{ getConditionSign(condition) }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="select-records-form-field">
+                    <input matInput formControlName="value" placeholder="Value" autocomplete="off">
+                </mat-form-field>
+                <button mat-icon-button (click)="addCondition()">
+                    <mat-icon color="primary">add_box</mat-icon>
+                </button>
+            </div>
+            <div *ngIf="conditionsList.length">
+                <div class="condition-body"*ngFor="let condition of conditionsList; let i=index">
+                    <div>
+                        {{condition.attributeName}} {{getConditionSign(condition.condition)}} {{condition.value}} {{displayAndSign(i)}}
+                    </div>
+                    <button mat-icon-button (click)="removeCondition(i)">
+                        <mat-icon color="primary">remove</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="buttons-container">
+        <button mat-raised-button (click)="cancel()">Cancel</button>
+        <button class="create-button" mat-raised-button color="primary" (click)="select()">Select</button>
+    </div>
+</div>
