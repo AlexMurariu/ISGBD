@@ -485,7 +485,6 @@ app.post("/database/:databaseName/table/:tableName/select-data", async (req, res
                             finalArray.push(recordVal);
                         }
                     }
-                    console.log(finalArray);
                     records = finalArray;
 
                 attributes = attributes.map(attr => {

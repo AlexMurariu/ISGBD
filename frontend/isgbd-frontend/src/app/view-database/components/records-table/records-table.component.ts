@@ -79,7 +79,6 @@ export class RecordsTableComponent implements OnInit {
   }
 
   generateDisplayColumns() {
-    console.log(this.attributes);
     this.displayedColumns = this.attributes.map((attribute: AttributeModel) => attribute.attributeName);
   }
 

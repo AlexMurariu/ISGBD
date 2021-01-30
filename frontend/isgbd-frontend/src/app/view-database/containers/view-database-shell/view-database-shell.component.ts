@@ -57,13 +57,16 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
       }),
       this.store.pipe(select(fromViewDatabase.getSelectedRecords)).subscribe((data: {data: string[], attributesList: AttributeModel[]}) => {
         this.selectedRecords = data;
-        console.log('Shell', this.selectedRecords);
         if (this.selectDialog) {
           this.selectDialog.componentInstance.data = {
               tablesList: this.tablesList,
               selectedRecords: this.selectedRecords,
               selectRecordsCallback: this.selectRecords
           };
+
+          this.selectDialog.afterClosed().subscribe(() => {
+            this.selectedRecords = null;
+          })
         }
       }),
     ); 
