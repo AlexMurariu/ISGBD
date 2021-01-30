@@ -544,7 +544,7 @@ app.post("/database/:databaseName/generate-records", async (req, res) => {
                     if (attribute.isPrimaryKey) {
                         key = attribute.attributeName + j
                     } else {
-                        value = value + attribute.attributeName + j + '#';
+                        value = value +  j + '#';
                     }
                 });
                 

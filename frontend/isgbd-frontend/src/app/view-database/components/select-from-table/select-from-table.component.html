@@ -69,8 +69,8 @@
         </div>
     </div>
 
-    <div *ngIf="data.selectedRecords">
-        <div class="title"> Records</div>
+    <div *ngIf="data.selectedRecords" style="margin-bottom: 15px;">
+        <div class="table-title"> Records</div>
         <app-records-table
             [attributes]="data.selectedRecords.attributesList"
             [primaryKey]="[]"
