@@ -1,3 +1,4 @@
+import { AttributeModel } from './../../shared/models/attribute.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from "@angular/core";
 import { Observable } from 'rxjs';
@@ -89,26 +90,30 @@ export class ViewDatabaseService {
         )
     }
     
-    selectTableRecords(data: any): Observable<{data: string[], attributesList: string[]}> {
+    selectTableRecords(data: any): Observable<{data: string[], attributesList: AttributeModel[]}> {
         const url = `${this.baseUrl}/database/${data.databaseName}/table/${data.tableName}/select-data`;
         const body = {
             attributes: data.attributes,
             conditions: data.conditions,
             distinct: data.distinct
         }
-        
+
         return this.http.post<any>(url, body)
         .pipe(
-            map((response: {data: string[], attributesList: string[]}) => {
+            map((response: {data: string[], attributesList: AttributeModel[]}) => {
                 return response;
             })
         )
     }
 
-    generateTableRecords(databaseName: string, table: TableModel): Observable<any> {
+    generateTableRecords(databaseName: string, table: string): Observable<any> {
         const url = `${this.baseUrl}/database/${databaseName}/generate-records`;
 
-        return this.http.post<any>(url, table)
+        const body = {
+            tableName: table
+        }
+
+        return this.http.post<any>(url, body)
         .pipe(
             map((response: any) => {
                 return [];

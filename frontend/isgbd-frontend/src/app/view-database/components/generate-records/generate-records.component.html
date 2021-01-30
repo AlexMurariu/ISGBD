@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="header">
+        <div class="title">Generate records</div>
+    </div>
+    <div class="generate-records-form" [formGroup]="generateRecordForm">
+        <mat-form-field>
+            <mat-label>Table</mat-label>
+            <mat-select formControlName="tableName">
+                <mat-option *ngFor="let table of data.tablesList" [value]="table.tableName">
+                    {{ table.tableName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="buttons-container">
+        <button mat-raised-button (click)="cancel()">Cancel</button>
+        <button class="create-button" mat-raised-button color="primary" (click)="generate()">Generate</button>
+    </div>
+</div>
+

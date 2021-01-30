@@ -1,3 +1,4 @@
+import { AttributeModel } from './../../shared/models/attribute.model';
 import { Action } from '@ngrx/store';
 import { IndexModel, TableModel } from 'src/app/shared/models';
 
@@ -162,7 +163,7 @@ export class SelectRecords implements Action {
 export class SelectRecordsSuccess implements Action {
     readonly type = ViewDatabaseActionTypes.SelectRecordsSuccess;
 
-    constructor(public payload: {data: string[], attributesList: string[]}) { }
+    constructor(public payload: {data: string[], attributesList: AttributeModel[]}) { }
 }
 
 export class SelectRecordsFail implements Action {
@@ -174,7 +175,7 @@ export class SelectRecordsFail implements Action {
 export class GenerateRecords implements Action {
     readonly type = ViewDatabaseActionTypes.GenerateRecords;
 
-    constructor(public payload: {databaseName: string, table: TableModel}) { }
+    constructor(public payload: {databaseName: string, table: string}) { }
 }
 
 export class GenerateRecordsSuccess implements Action {

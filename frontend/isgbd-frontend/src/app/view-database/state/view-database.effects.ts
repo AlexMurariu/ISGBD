@@ -1,3 +1,4 @@
+import { AttributeModel } from './../../shared/models/attribute.model';
 import { catchError, mergeMap, switchMap } from 'rxjs/operators';
 import { Action } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
@@ -209,7 +210,7 @@ export class ViewDatabaseEffects {
         ofType(viewDatabaseActions.ViewDatabaseActionTypes.GenerateRecords),
         mergeMap((action: viewDatabaseActions.GenerateRecords) => 
             this.viewDatabaseService.generateTableRecords(action.payload.databaseName, action.payload.table).pipe(
-                switchMap((data: {data: string[], attributesList: string[]}) => {
+                switchMap((data: {data: string[], attributesList: AttributeModel[]}) => {
                         return [
                             new AddToNotification(NotificationModel.createSuccessNotification('', 'Records generated successfully!'))
                         ]

@@ -16,6 +16,7 @@ export class RecordsTableComponent implements OnInit {
   @Input() attributes: AttributeModel[];
   @Input() primaryKey: string[];
   @Input() recordsList: {key: string, value: string}[];
+  @Input() isFromSelect: boolean;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -26,6 +27,23 @@ export class RecordsTableComponent implements OnInit {
       this.recordsList = [];
     }
     
+    if (this.isFromSelect) {
+      this.recordsList = this.recordsList.map((record: any) => {
+        let stringValue = '';
+
+        record.forEach((val: string) => {
+          stringValue = stringValue + val + '#';
+        });
+        
+        stringValue = stringValue.substr(0, stringValue.length - 1);
+        
+        return {
+          key: '',
+          value: stringValue
+        };
+      });
+    }
+
     this.dataSource.data = this.recordsList;
     this.generateDisplayColumns();
   }
@@ -45,6 +63,10 @@ export class RecordsTableComponent implements OnInit {
   }
 
   displayAttributeValue(attribute: string, element: {key: string, value: string}, index: number) {
+    if (this.isFromSelect) {
+      index = index + 1;
+    }
+
     const isPrimaryKey = this.primaryKey.find((primaryKey: string) => primaryKey === attribute);
 
     return isPrimaryKey ? element.key : this.getAttributeValue(element.value, index);
@@ -57,6 +79,7 @@ export class RecordsTableComponent implements OnInit {
   }
 
   generateDisplayColumns() {
+    console.log(this.attributes);
     this.displayedColumns = this.attributes.map((attribute: AttributeModel) => attribute.attributeName);
   }
 

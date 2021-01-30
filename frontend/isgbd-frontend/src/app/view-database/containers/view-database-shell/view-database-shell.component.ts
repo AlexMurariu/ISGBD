@@ -1,3 +1,6 @@
+import { AttributeModel } from './../../../shared/models/attribute.model';
+import { GenerateRecords } from './../../state/view-database.actions';
+import { GenerateRecordsComponent } from './../../components/generate-records/generate-records.component';
 import { SelectFromTableComponent } from './../../components/select-from-table/select-from-table.component';
 import { InsertInTableComponent } from './../../components/insert-in-table/insert-in-table.component';
 import { AddTableComponent } from './../../components/add-table/add-table.component';
@@ -11,7 +14,7 @@ import * as fromSelectedDatabase from '../../../state/selected-database.selector
 import { CreateIndex, CreateTable, DeleteTableRecords, GetDatabaseTables, InsertTableRecord, SelectRecords } from '../../state/view-database.actions';
 import { ClearSelectedDatabase } from 'src/app/state/selected-database.actions';
 import { CreateIndexComponent } from '../../components/create-index/create-index.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as _ from 'lodash';
 import { DeleteFromTableComponent } from '../../components/delete-from-table/delete-from-table.component';
 
@@ -26,6 +29,8 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
   selectedDatabase: string;
   getTablesListLoadInProgress: boolean;
   recordsList: {key: string, value: string}[];
+  selectedRecords: {data: string[], attributesList: AttributeModel[]};
+  selectDialog: MatDialogRef<any>;
 
   private subscriptions: Subscription[] = [];
 
@@ -49,6 +54,17 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
       }),
       this.store.pipe(select(fromViewDatabase.getTableRecords)).subscribe((recordsList: {key: string, value: string}[]) => {
         this.recordsList = recordsList;
+      }),
+      this.store.pipe(select(fromViewDatabase.getSelectedRecords)).subscribe((data: {data: string[], attributesList: AttributeModel[]}) => {
+        this.selectedRecords = data;
+        console.log('Shell', this.selectedRecords);
+        if (this.selectDialog) {
+          this.selectDialog.componentInstance.data = {
+              tablesList: this.tablesList,
+              selectedRecords: this.selectedRecords,
+              selectRecordsCallback: this.selectRecords
+          };
+        }
       }),
     ); 
   }
@@ -156,11 +172,12 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
   }
 
   openSelectFromTableDialog() {
-    this.dialog.open(SelectFromTableComponent, {
+    this.selectDialog = this.dialog.open(SelectFromTableComponent, {
       minWidth: "90%",
       maxHeight: '98vh',
       data: {
         tablesList: this.tablesList,
+        selectedRecords: this.selectedRecords,
         selectRecordsCallback: this.selectRecords
       }
     });
@@ -171,5 +188,23 @@ export class ViewDatabaseShellComponent implements OnInit, OnDestroy {
       databaseName: this.selectedDatabase,
       ...data
     }))
+  }
+
+  generateRecordsDialog() {
+    this.dialog.open(GenerateRecordsComponent, {
+      minWidth: "30%",
+      maxHeight: '98vh',
+      data: {
+        tablesList: this.tablesList,
+        generateRecordsCallback: this.generateRecords
+      }
+    });
+  }
+
+  generateRecords = (table: string) => {
+    this.store.dispatch(new GenerateRecords({
+      databaseName: this.selectedDatabase,
+      table
+    }));
   }
 }

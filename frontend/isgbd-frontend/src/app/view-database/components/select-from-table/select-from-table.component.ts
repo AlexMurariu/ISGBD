@@ -7,6 +7,7 @@ import { ConditionSigns } from 'src/app/shared/constants';
 
 interface DialogData {
   tablesList: TableModel[];
+  selectedRecords: {data: string[][], attributesList: AttributeModel[]};
   selectRecordsCallback: any;
 }
 
@@ -26,7 +27,7 @@ export class SelectFromTableComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     public readonly dialogRef: MatDialogRef<SelectFromTableComponent>, 
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) { }
 
   ngOnInit(): void {
@@ -112,6 +113,27 @@ export class SelectFromTableComponent implements OnInit {
     });
 
     return isSelected;
+  }
+
+  get processedRecords() {
+    if (this.data.selectedRecords) {
+      const arr = this.data.selectedRecords.data.map((record: string[]) => {
+        let stringValue = '';
+
+        record.forEach((val: string) => {
+          stringValue = stringValue + val + '#';
+        });
+        
+        stringValue = stringValue.substr(0, stringValue.length - 1);
+        
+        return {
+          key: '',
+          value: stringValue
+        };
+      });
+
+      return arr;
+    }
   }
 
   displayAndSign(index: number) {

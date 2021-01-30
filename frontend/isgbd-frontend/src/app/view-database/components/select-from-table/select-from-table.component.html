@@ -68,6 +68,17 @@
             </div>
         </div>
     </div>
+
+    <div *ngIf="data.selectedRecords">
+        <div class="title"> Records</div>
+        <app-records-table
+            [attributes]="data.selectedRecords.attributesList"
+            [primaryKey]="[]"
+            [recordsList]="data.selectedRecords.data"
+            [isFromSelect]="true"
+        ></app-records-table>
+    </div>
+
     <div class="buttons-container">
         <button mat-raised-button (click)="cancel()">Cancel</button>
         <button class="create-button" mat-raised-button color="primary" (click)="select()">Select</button>

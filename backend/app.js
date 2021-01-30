@@ -3,7 +3,14 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const utils = require("./utils");
 const cors = require('cors');
-const { getDatabasesFromDB, insertDataInDB, deleteDataInDB, createIndexTable, deleteAllFromTable } = require("./dbFunctions");
+const { 
+    getDatabasesFromDB, 
+    insertDataInDB, 
+    deleteDataInDB, 
+    createIndexTable, 
+    deleteAllFromTable, 
+    insertAllInTable 
+} = require("./dbFunctions");
 
 const app = express();
 app.use(bodyParser.json());
@@ -388,7 +395,9 @@ app.post("/database/:databaseName/table/:tableName/select-data", async (req, res
     const databaseName = req.params.databaseName;
     const tableName = req.params.tableName;
     const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
-    console.log(req.body);
+    let attributes = req.body.attributes;
+    const conditions = req.body.conditions;
+    const distinct = req.body.distinct;
 
     if (databaseIndex === -1) {
         res.status(404);
@@ -399,12 +408,96 @@ app.post("/database/:databaseName/table/:tableName/select-data", async (req, res
 
         if (tableIndex !== -1) {
             const dataFromDb = await getDatabasesFromDB(databaseName, tableName);
+            
+            if (attributes[0] === "*") {
+                attributes = tableList[tableIndex].attributes.map(attr => attr.attributeName);
+            }
 
             if (!dataFromDb.length) {
                 res.status(404);
                 res.send('There are no records in this table!');
             } else { 
+                let records = dataFromDb.map(record => {
+                    let value = [record.key];
+                    
+                    record.value.split('#').forEach(val => value.push(val));
+                    return value;
+                });
+
+                conditions.forEach(condition => {
+                    const attributeIndex = tableList[tableIndex].attributes.findIndex(attr => condition.attributeName === attr.attributeName);
+                    
+                    records = records.filter(record => {
+                        if (condition.condition === 'eq') {
+                            return record[attributeIndex] === condition.value;
+                        } else if (condition.condition === 'neq') {
+                            return record[attributeIndex] !== condition.value;
+                        } else if (condition.condition === 'gt') {
+                            return record[attributeIndex] > condition.value;
+                        } else if (condition.condition === 'gte') {
+                            return record[attributeIndex] >= condition.value;
+                        } else if (condition.condition === 'lt') {
+                            return record[attributeIndex] < condition.value;
+                        } else if (condition.condition === 'lte') {
+                            return record[attributeIndex] <= condition.value;
+                        }
+                    })
+                });
+
                 
+                    const indexValues = attributes.map(attr => {
+                        return tableList[tableIndex].attributes.findIndex(attribute => attr === attribute.attributeName);
+                    });
+
+                    let finalArray = [];
+
+                    for (let i = 0; i < records.length; i++) {
+                        let val = '';
+                        const recordVal = [];
+
+                        for (let indexI = 0; indexI < indexValues.length; indexI++) {
+                            val = val + records[i][indexValues[indexI]];
+                            recordVal.push(records[i][indexValues[indexI]]);
+                        }
+
+                        if (finalArray.length === 0 && distinct) {
+                            finalArray.push(recordVal);
+                        }
+                        
+                        if (distinct) {
+                            let isInArray = false;
+                            for(let j = 0; j < finalArray.length; j++) {
+                                let valJ = '';
+
+                                for (let indexJ = 0; indexJ < indexValues.length; indexJ++) {
+                                    valJ = valJ + records[j][indexValues[indexJ]];
+                                }
+
+                                if (val === valJ) {
+                                    isInArray = true;
+                                }
+                            }
+
+                            if (!isInArray) {
+                                finalArray.push(recordVal);
+                            }
+                        } else {
+                            finalArray.push(recordVal);
+                        }
+                    }
+                    console.log(finalArray);
+                    records = finalArray;
+
+                attributes = attributes.map(attr => {
+                    return tableList[tableIndex].attributes.find(attribute => attribute.attributeName === attr);
+                });
+
+                const response = {
+                    data: records,
+                    attributesList: attributes
+                };
+
+                res.send(response);
             }
         }
     }
@@ -415,7 +508,7 @@ app.post("/database/:databaseName/generate-records", async (req, res) => {
     const databaseName = req.params.databaseName;
     const tableName = req.body.tableName;
     const databaseIndex = utils.findItemInList(databaseFromFile.databases, 'dataBaseName', databaseName);
-
+    
     if (databaseIndex === -1) {
         res.status(404);
         res.send('Database not found!');
@@ -424,6 +517,50 @@ app.post("/database/:databaseName/generate-records", async (req, res) => {
         const tableIndex = utils.findItemInList(tableList, 'tableName', tableName);
 
         if (tableIndex !== -1) {
+            const attributes = tableList[tableIndex].attributes;
+            const primaryKeys = tableList[tableIndex].primaryKey;
+            let attributeNames = [];
+
+            attributes.forEach(attribute => {
+                if (primaryKeys.find(primaryKey => primaryKey === attribute.attributeName)) {
+                    attributeNames.push({
+                        attributeName: attribute.attributeName,
+                        isPrimaryKey: true
+                    });
+                } else {
+                    attributeNames.push({
+                        attributeName: attribute.attributeName,
+                        isPrimaryKey: false
+                    });
+                }
+            });
+
+            let records = [];
+
+            for (let j = 0; j < 1000000; j++) {
+                let key = '';
+                let value = '';
+                
+                attributeNames.forEach(attribute => {
+                    if (attribute.isPrimaryKey) {
+                        key = attribute.attributeName + j
+                    } else {
+                        value = value + attribute.attributeName + j + '#';
+                    }
+                });
+                
+                value = value.substring(0, value.length - 1);
+                records.push({key, value});
+            }
+
+            const insertionSuccessfull = insertAllInTable(databaseName, tableName, records);
+
+            if (insertionSuccessfull) {
+                res.send([]);
+            } else {
+                res.status(500);
+                res.send('Something went wrong while inserting the record!');
+            }  
         }
     }
 });

@@ -62,6 +62,29 @@ export function reducer(state = initialState, action: ViewDatabaseActions): View
             }
 
 
+        case ViewDatabaseActionTypes.SelectRecords:
+            return {
+                ...state,
+                selectedRecordsLoading: true
+            }
+
+        case ViewDatabaseActionTypes.SelectRecordsSuccess:
+            return {
+                ...state,
+                selectedRecords: action.payload,
+                selectedRecordsLoading: false
+            }
+
+        case ViewDatabaseActionTypes.SelectRecordsFail:
+            return {
+                ...state,
+                selectedRecords: {
+                    data: [],
+                    attributesList: []
+                },
+                selectedRecordsLoading: false
+            }
+
         case ViewDatabaseActionTypes.GenerateRecords:
             return {
                 ...state,

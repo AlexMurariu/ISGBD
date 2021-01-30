@@ -1,0 +1,28 @@
+.container {
+    width: 100%;
+    
+    .header {
+        width: 100%;
+
+        .title {
+            font-size: 25px;
+            font-weight: 500;
+        }
+    }
+
+    .generate-records-form {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .buttons-container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+
+        .create-button {
+            margin-left: 10px;
+        }
+    }
+}
